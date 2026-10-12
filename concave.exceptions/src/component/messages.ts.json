@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "hybrid-population-1",
+      "path": "src/component/messages.ts",
+      "upstream_sha256": "619ee4f7bac312a2b996686b3356dd99f445a34d260a1d3d66b91621075b7ad2",
+      "start": 0,
+      "end": 2,
+      "replacement_sha256": "39177c7a504bae511891fae2ad064a7ab27e8ded12dcd5dbd631f1cf8cab84a7",
+      "fence": true
+    },
+    {
+      "id": "hybrid-population-2",
+      "path": "src/component/messages.ts",
+      "upstream_sha256": "1d0d44c88117848904ff38f763d6111db3fb1cf87ce44598dc305624fd325207",
+      "start": 923,
+      "end": 935,
+      "replacement_sha256": "001f1ae7fb84b9f2900402aa71cebf8478305372ced694c8d91be40435aa9fab",
+      "fence": true
+    },
+    {
+      "id": "hybrid-population-3",
+      "path": "src/component/messages.ts",
+      "upstream_sha256": "1d0d44c88117848904ff38f763d6111db3fb1cf87ce44598dc305624fd325207",
+      "start": 941,
+      "end": 944,
+      "replacement_sha256": "08ff72a742e25a639045409567076bfaaba69542f9ae8af2dcf6b9a9389d6bf7",
+      "fence": true
+    }
+  ]
+}

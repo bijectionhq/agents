@@ -15,6 +15,39 @@ import schema from "./schema.js";
 import { initBijectionTest, modules } from "./setup.test.js";
 
 describe("agent", () => {
+  // concave:begin hybrid-population-witness-1
+  // preserves: src/fusion.ts#hybrid-rank-identity
+  // why: Witness the registered hybrid action retaining a lexical-only candidate under a bounded result limit.
+  // witness: src/component/messages.test.ts
+  // remove-when: Upstream contains this registered-action regression witness.
+  test("hybrid selection admits a lexical-only result before chronological context ordering", async () => {
+    const t = initBijectionTest();
+    const thread = await t.mutation(api.threads.createThread, { userId: "fusion" });
+    const vector = (a: number, b: number) => [a, b, ...Array(126).fill(0)];
+    const { messages } = await t.mutation(api.messages.addMessages, {
+      threadId: thread._id as Id<"threads">,
+      messages: [
+        { message: { role: "user", content: "first unrelated candidate" } },
+        { message: { role: "user", content: "second unrelated candidate" } },
+        { message: { role: "user", content: "needle lexical candidate" } },
+      ],
+      embeddings: { vectors: [vector(1, 0), vector(0.8, 0.6), vector(0, 1)], model: "fusion-fixture", dimension: 128 },
+    });
+    const selected = await t.action(api.messages.searchMessages, {
+      threadId: thread._id as Id<"threads">,
+      embedding: vector(1, 0),
+      embeddingModel: "fusion-fixture",
+      text: "needle",
+      textSearch: true,
+      vectorSearch: true,
+      vectorScoreThreshold: 0.5,
+      limit: 2,
+      messageRange: { before: 0, after: 0 },
+    });
+    expect(selected.map((message) => message._id)).toEqual([messages[0]._id, messages[2]._id]);
+  });
+
+  // concave:end hybrid-population-witness-1
   test("getMaxMessage works for threads", async () => {
     const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {

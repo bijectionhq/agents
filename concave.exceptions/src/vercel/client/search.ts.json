@@ -1,0 +1,104 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "prepared-embedding-1",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 44,
+      "end": 44,
+      "replacement_sha256": "7fd2bf154f185f0574b039a93c09b4cca298addae8182249b9e55ea0dccf81d8",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-10",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 631,
+      "end": 639,
+      "replacement_sha256": "62e14dab33298e6bec0c540e0bca7ec75805f46ff2be4ed42a43782acfbc75b1",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-11",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 666,
+      "end": 676,
+      "replacement_sha256": "a0fcac9cbe43bac968663376aa106d83e8a0ceba7e0138a346125d402804fbbe",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-2",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 153,
+      "end": 190,
+      "replacement_sha256": "c35086d66f3d06516f78e031e7d1a3e626a26779058f363b8aae1916d48e00e6",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-3",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 227,
+      "end": 228,
+      "replacement_sha256": "733bb48aa5144aebcdb4713774db07a612bfe2d573e719ec5368bb0e582b0eb9",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-4",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 417,
+      "end": 418,
+      "replacement_sha256": "7b24bb5db4f5562dc16209093eb4669c4a35ed00e4e2d123ba893e37e439dd66",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-5",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 425,
+      "end": 428,
+      "replacement_sha256": "7606242db252c50a5c07ff683f177d5478fce169e0a9c79717fbc60772079002",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-6",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 561,
+      "end": 562,
+      "replacement_sha256": "7ccd5c593d465ff168274ab537a843b5437354744b551b25cb47c7b328be7a66",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-7",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 564,
+      "end": 565,
+      "replacement_sha256": "0ef0010d1f14a7ad49e21fd795e2451feb580b477206124b0b26b5305c33370f",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-8",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 606,
+      "end": 606,
+      "replacement_sha256": "de3a84f0c22fb07fd59834d9b6e688fc789f6d57929ab55e5ae99a38f53be93d",
+      "fence": true
+    },
+    {
+      "id": "prepared-embedding-9",
+      "path": "src/vercel/client/search.ts",
+      "upstream_sha256": "a85f847cf860b225f3a057fd7fa9a3865403895bdf9d7def7f4cfd705ed36d5b",
+      "start": 630,
+      "end": 630,
+      "replacement_sha256": "e279984f6aa7a5556ba9b199ccc4edbd6d4abd3ad005a7f93b8f7c3c90a028d2",
+      "fence": true
+    }
+  ]
+}

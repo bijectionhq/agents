@@ -42,6 +42,21 @@ const MAX_ORDER_COMPLETION_MESSAGES = 1_000;
 // 10k characters should be more than enough for most cases, and stays under
 // the 8k token limit for some models.
 const MAX_EMBEDDING_TEXT_LENGTH = 10_000;
+// concave:begin prepared-embedding-1
+// preserves: src/vercel/client/search.ts#prepared-embedding-identity
+// why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+// witness: src/vercel/client/embedding.test.ts
+// remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+// concave:invariant prepared-embedding-identity
+// A provider vector belongs to one exact prepared input and its message identity.
+// Reuse stays within this call and model; retained vectors are not mutable inputs.
+
+function embeddingText(message: ModelMessage | Message): string {
+  return isTool(message)
+    ? ""
+    : (extractText(message) ?? "").trim().slice(0, MAX_EMBEDDING_TEXT_LENGTH);
+}
+// concave:end prepared-embedding-1
 
 /**
  * Omit the oldest order when a descending pagination window split it.
@@ -151,43 +166,63 @@ export async function fetchRecentAndSearchMessages(
   const threadId = args.threadId;
   const targetMessageId =
     args.targetMessageId ?? args.upToAndIncludingMessageId;
-  if (threadId && opts.recentMessages !== 0) {
-    const fetchRecentPage = (numItems: number, cursor: string | null) =>
-      ctx.runQuery(component.messages.listMessagesByThreadId, {
-        threadId,
-        excludeToolMessages: opts.excludeToolMessages,
-        paginationOpts: { numItems, cursor },
-        upToAndIncludingMessageId: targetMessageId,
-        order: "desc",
-        statuses: ["success"],
-      });
-    const firstPage = await fetchRecentPage(
-      opts.recentMessages ?? DEFAULT_RECENT_MESSAGES,
-      null,
-    );
-    let page = firstPage.page;
-    const oldest = page.at(-1);
-    if (
-      oldest &&
-      oldest.stepOrder > 0 &&
-      !firstPage.isDone &&
-      firstPage.continueCursor
-    ) {
-      const completionPage = await fetchRecentPage(
-        Math.min(oldest.stepOrder, MAX_ORDER_COMPLETION_MESSAGES),
-        firstPage.continueCursor,
-      );
-      page = [
-        ...page,
-        ...completionPage.page.filter(
-          (message) => message.order === oldest.order,
-        ),
-      ];
-    }
-    const retained = trimIncompleteOldestOrder(sorted(page));
-    included = new Set(retained.map((m) => m._id));
-    recentMessages = filterOutOrphanedToolMessages(retained);
-  }
+  // concave:begin prepared-embedding-2
+  // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+  // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+  // witness: src/vercel/client/contextOverlap.test.ts
+  // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+  // Explicit search text does not depend on the recent-message page. Await
+  // both promises together so either failure is observed, without retaining a
+  // cross-request embedding cache or moving target-message reads earlier.
+  const [preparedEmbedding] = await Promise.all([
+    "runAction" in ctx &&
+    opts.searchOptions?.vectorSearch &&
+    opts.searchOptions.limit &&
+    args.searchText &&
+    args.getEmbedding
+      ? args.getEmbedding(args.searchText)
+      : undefined,
+    (async () => {
+      if (threadId && opts.recentMessages !== 0) {
+        const fetchRecentPage = (numItems: number, cursor: string | null) =>
+          ctx.runQuery(component.messages.listMessagesByThreadId, {
+            threadId,
+            excludeToolMessages: opts.excludeToolMessages,
+            paginationOpts: { numItems, cursor },
+            upToAndIncludingMessageId: targetMessageId,
+            order: "desc",
+            statuses: ["success"],
+          });
+        const firstPage = await fetchRecentPage(
+          opts.recentMessages ?? DEFAULT_RECENT_MESSAGES,
+          null,
+        );
+        let page = firstPage.page;
+        const oldest = page.at(-1);
+        if (
+          oldest &&
+          oldest.stepOrder > 0 &&
+          !firstPage.isDone &&
+          firstPage.continueCursor
+        ) {
+          const completionPage = await fetchRecentPage(
+            Math.min(oldest.stepOrder, MAX_ORDER_COMPLETION_MESSAGES),
+            firstPage.continueCursor,
+          );
+          page = [
+            ...page,
+            ...completionPage.page.filter(
+              (message) => message.order === oldest.order,
+            ),
+          ];
+        }
+        const retained = trimIncompleteOldestOrder(sorted(page));
+        included = new Set(retained.map((m) => m._id));
+        recentMessages = filterOutOrphanedToolMessages(retained);
+      }
+    })(),
+  ]);
+  // concave:end prepared-embedding-2
   if (
     (opts.searchOptions?.textSearch || opts.searchOptions?.vectorSearch) &&
     opts.searchOptions?.limit
@@ -225,7 +260,14 @@ export async function fetchRecentAndSearchMessages(
     }
     if (opts.searchOptions?.vectorSearch) {
       if (!embedding && args.getEmbedding) {
-        const embeddingFields = await args.getEmbedding(text);
+        // concave:begin prepared-embedding-3
+        // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+        // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+        // witness: src/vercel/client/embedding.test.ts
+        // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+        const embeddingFields =
+          preparedEmbedding ?? (await args.getEmbedding(text));
+        // concave:end prepared-embedding-3
         embedding = embeddingFields.embedding;
         const effectiveModel =
           embeddingFields.embeddingModel ?? embeddingFields.textEmbeddingModel;
@@ -415,7 +457,13 @@ export async function embedMessages(
         model: string;
       }
     | undefined;
-  const messageTexts = messages.map((m) => !isTool(m) && extractText(m));
+  // concave:begin prepared-embedding-4
+  // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+  // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+  // witness: src/vercel/client/embedding.test.ts
+  // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+  const messageTexts = messages.map(embeddingText);
+  // concave:end prepared-embedding-4
   // Find the indexes of the messages that have text.
   const textIndexes = messageTexts
     .map((t, i) => (t ? i : undefined))
@@ -423,9 +471,13 @@ export async function embedMessages(
   if (textIndexes.length === 0) {
     return undefined;
   }
-  const values = messageTexts
-    .map((t) => t && t.trim().slice(0, MAX_EMBEDDING_TEXT_LENGTH))
-    .filter((t): t is string => !!t);
+  // concave:begin prepared-embedding-5
+  // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+  // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+  // witness: src/vercel/client/embedding.test.ts
+  // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+  const values = textIndexes.map((index) => messageTexts[index]);
+  // concave:end prepared-embedding-5
   // Then embed those messages.
   const textEmbeddings = await embedMany(ctx, {
     ...options,
@@ -559,10 +611,33 @@ export async function generateAndSaveEmbeddings(
     { ...args, embeddingModel: effectiveEmbeddingModel },
     toEmbed.map((m) => m.message!),
   );
-  if (embeddings && embeddings.vectors.some((v) => v !== null)) {
+  // concave:begin prepared-embedding-6
+  // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+  // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+  // witness: src/vercel/client/embedding.test.ts
+  // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+  if (embeddings) {
+    await saveMessageEmbeddings(ctx, component, toEmbed, embeddings);
+  }
+}
+
+async function saveMessageEmbeddings(
+  ctx: ActionCtx,
+  component: AgentComponent,
+  messages: MessageDoc[],
+  embeddings: NonNullable<Awaited<ReturnType<typeof embedMessages>>>,
+) {
+  if (embeddings.vectors.some((v) => v !== null)) {
+  // concave:end prepared-embedding-6
     await ctx.runMutation(component.vector.index.insertBatch, {
       vectorDimension: embeddings.dimension,
-      vectors: toEmbed
+      // concave:begin prepared-embedding-7
+      // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+      // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+      // witness: src/vercel/client/embedding.test.ts
+      // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+      vectors: messages
+      // concave:end prepared-embedding-7
         .map((m, i) => ({
           messageId: m._id,
           model: embeddings.model,
@@ -604,6 +679,16 @@ export async function fetchContextWithPrompt(
   const { threadId, userId, textEmbeddingModel, embeddingModel } = args;
   const effectiveEmbeddingModel = embeddingModel ?? textEmbeddingModel;
 
+  // concave:begin prepared-embedding-8
+  // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+  // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+  // witness: src/vercel/client/embedding.test.ts
+  // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+  // This result belongs only to this call and its one selected model. Reuse
+  // requires exact provider input, including message preprocessing below.
+  let queryEmbedding: { text: string; vector: number[] } | undefined;
+
+  // concave:end prepared-embedding-8
   const promptArray = getPromptArray(args.prompt);
 
   const searchText = promptArray.length
@@ -628,15 +713,27 @@ export async function fetchContextWithPrompt(
           effectiveEmbeddingModel,
           "An embeddingModel (or textEmbeddingModel) is required to be set on the Agent that you're doing vector search with",
         );
+        // concave:begin prepared-embedding-9
+        // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+        // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+        // witness: src/vercel/client/embedding.test.ts
+        // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+        const result = await embedMany(ctx, {
+          ...args,
+          userId,
+          values: [text],
+          embeddingModel: effectiveEmbeddingModel,
+        });
+        queryEmbedding = { text, vector: result.embeddings[0].slice() };
+        // concave:end prepared-embedding-9
         return {
-          embedding: (
-            await embedMany(ctx, {
-              ...args,
-              userId,
-              values: [text],
-              embeddingModel: effectiveEmbeddingModel,
-            })
-          ).embeddings[0],
+          // concave:begin prepared-embedding-10
+          // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+          // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+          // witness: src/vercel/client/embedding.test.ts
+          // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+          embedding: result.embeddings[0],
+          // concave:end prepared-embedding-10
           embeddingModel: effectiveEmbeddingModel,
         };
       },
@@ -664,16 +761,36 @@ export async function fetchContextWithPrompt(
       // Lazily generate embeddings for the prompt message, if it doesn't have
       // embeddings yet. This can happen if the message was saved in a mutation
       // where the LLM is not available.
-      await generateAndSaveEmbeddings(
-        ctx,
-        component,
-        {
-          ...args,
-          userId,
-          embeddingModel: effectiveEmbeddingModel,
-        },
-        [promptMessage],
-      );
+      // concave:begin prepared-embedding-11
+      // preserves: src/vercel/client/search.ts#prepared-embedding-identity
+      // why: Keep prepared provider input aligned with message identities; overlap independent context reads and reuse only an identical per-call query vector without exposing the retained vector to callback mutation.
+      // witness: src/vercel/client/embedding.test.ts
+      // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
+      if (
+        queryEmbedding &&
+        promptMessage.message &&
+        queryEmbedding.text === embeddingText(promptMessage.message)
+      ) {
+        const dimension = queryEmbedding.vector.length;
+        validateVectorDimension(dimension);
+        await saveMessageEmbeddings(ctx, component, [promptMessage], {
+          vectors: [queryEmbedding.vector],
+          dimension,
+          model: getModelName(effectiveEmbeddingModel),
+        });
+      } else {
+        await generateAndSaveEmbeddings(
+          ctx,
+          component,
+          {
+            ...args,
+            userId,
+            embeddingModel: effectiveEmbeddingModel,
+          },
+          [promptMessage],
+        );
+      }
+      // concave:end prepared-embedding-11
     }
   }
 

@@ -1,5 +1,12 @@
+// concave:begin hybrid-population-1
+// preserves: src/fusion.ts#hybrid-rank-identity
+// why: Fuse lexical and vector candidates before truncation, giving absent matches no score and retaining lexical-only messages.
+// witness: src/component/messages.test.ts
+// remove-when: Upstream uses the same bounded hybrid population and reciprocal-rank rules.
 import { assert, omit, pick } from "@bijectionhq/helpers";
+import { fuseRanks } from "../fusion.js";
 import { mergedStream, stream } from "@bijectionhq/helpers/server/stream";
+// concave:end hybrid-population-1
 import {
   paginationOptsValidator,
   type WithoutSystemFields,
@@ -921,27 +928,49 @@ export const searchMessages = action({
           limit,
         })
       ).filter((v) => v._score > (args.vectorScoreThreshold ?? 0));
-      // Reciprocal rank fusion
-      const k = 10;
-      const textEmbeddingIds = textSearchMessages?.map((m) => m.embeddingId);
-      const vectorScores = vectors
-        .map((v, i) => ({
-          id: v._id,
-          score:
-            1 / (i + k) +
-            1 / ((textEmbeddingIds?.indexOf(v._id) ?? Infinity) + k),
-        }))
-        .sort((a, b) => b.score - a.score);
-      const embeddingIds = vectorScores.slice(0, limit).map((v) => v.id);
+      // concave:begin hybrid-population-2
+      // preserves: src/fusion.ts#hybrid-rank-identity
+      // why: Fuse lexical and vector candidates before truncation, giving absent matches no score and retaining lexical-only messages.
+      // witness: src/component/messages.test.ts
+      // remove-when: Upstream uses the same bounded hybrid population and reciprocal-rank rules.
+      const lexicalMessages = new Map<string, MessageDoc>();
+      const lexicalIds = (textSearchMessages ?? []).map((message) => {
+        const id = message.embeddingId ?? message._id;
+        if (!lexicalMessages.has(id)) lexicalMessages.set(id, message);
+        return id;
+      });
+      const vectorIds = new Map<string, VectorTableId>(
+        vectors.map((vector) => [vector._id, vector._id]),
+      );
+      const selected = fuseRanks(
+        vectors.map((vector) => vector._id),
+        lexicalIds,
+      ).slice(0, limit);
+      const embeddingIds: VectorTableId[] = [];
+      const lexicalOnly: MessageDoc[] = [];
+      for (const id of selected) {
+        const vectorId = vectorIds.get(id);
+        if (vectorId) {
+          embeddingIds.push(vectorId);
+        } else {
+          const message = lexicalMessages.get(id);
+          if (message) lexicalOnly.push(message);
+        }
+      }
+      // concave:end hybrid-population-2
       const messages: MessageDoc[] = await ctx.runQuery(
         internal.messages._fetchSearchMessages,
         {
           searchAllMessagesForUserId: args.searchAllMessagesForUserId,
           threadId: args.threadId,
           embeddingIds,
-          textSearchMessages: textSearchMessages?.filter(
-            (m) => !embeddingIds.includes(m.embeddingId! as VectorTableId),
-          ),
+          // concave:begin hybrid-population-3
+          // preserves: src/fusion.ts#hybrid-rank-identity
+          // why: Fuse lexical and vector candidates before truncation, giving absent matches no score and retaining lexical-only messages.
+          // witness: src/component/messages.test.ts
+          // remove-when: Upstream uses the same bounded hybrid population and reciprocal-rank rules.
+          textSearchMessages: lexicalOnly,
+          // concave:end hybrid-population-3
           messageRange: args.messageRange ?? DEFAULT_MESSAGE_RANGE,
           beforeMessageId: args.targetMessageId,
           limit,
