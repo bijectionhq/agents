@@ -459,7 +459,7 @@ func coverageLoss(previous, current *policy.Config, before, after *Report) []Cov
 		}
 		if finding.Kind == "unmatched_selector" && strings.HasSuffix(finding.Path, "/") {
 			path := strings.TrimSuffix(finding.Path, "/")
-			if row, ok := rows[path]; ok && row.Selected != nil && row.Selected.Kind == "file" &&
+			if row, ok := rows[path]; ok && row.Selected != nil && (row.Selected.Mode == "100644" || row.Selected.Mode == "100755") &&
 				slices.Contains(previous.RootSelectors(), path) && slices.Contains(current.RootSelectors(), path) {
 				// The metadata error is gone; the same baseline file is now read.
 				// lostCoverage above still refuses any genuinely dropped row.

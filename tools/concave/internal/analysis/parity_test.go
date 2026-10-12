@@ -277,8 +277,20 @@ func TestParityUsesTheBaselineToolForCoverage(t *testing.T) {
 // another approves that divergence: it is resolved, not lost coverage. A
 // hunk that merely stops being detected remains coverage loss.
 func TestParityRepairsAnExplicitFileRootWithoutLosingCoverage(t *testing.T) {
+	for _, scenario := range []struct {
+		name      string
+		inherited bool
+	}{{"fork-owned", false}, {"inherited", true}} {
+		t.Run(scenario.name, func(t *testing.T) { testFileRootRepair(t, scenario.inherited) })
+	}
+}
+
+func testFileRootRepair(t *testing.T, inherited bool) {
 	f, _ := parityFixture(t)
 	f.Write("AGENTS.md", "# Directions\nPreserve source.\n")
+	if inherited {
+		f.Config.Upstream = f.Commit()
+	}
 	f.Config.Roots = append(f.Config.Roots, "AGENTS.md")
 	f.Config.Families = append(f.Config.Families, policy.Family{ID: "directions", Title: "Directions", Paths: []string{"AGENTS.md"}})
 	f.Save()
