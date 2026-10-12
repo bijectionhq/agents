@@ -453,7 +453,8 @@
         "src/component/_generated/component.ts",
         "src/component/_generated/dataModel.ts",
         "src/component/_generated/server.ts",
-        "scripts/check_component_generated.py"
+        "scripts/check_component_generated.py",
+        "src/component/bijection.config.ts"
       ],
       "command": [
         "python3",
@@ -497,7 +498,8 @@
         "src/component/users.test.ts",
         "src/component/users.ts",
         "src/component/vector/index.ts",
-        "src/component/vector/tables.ts"
+        "src/component/vector/tables.ts",
+        "src/component/bijection.config.ts"
       ],
       "generator": "scripts/component_fork_codegen.py in the Bijection platform checkout",
       "check": "component-generated",

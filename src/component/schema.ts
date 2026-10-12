@@ -182,9 +182,13 @@ export const schema = defineSchema({
 });
 
 // concave:begin portable-validator-type
+// preserves: src/component/schema.ts#validator-identity
 // why: Name the validator builder through its public generic type instead of leaking SDK-private file validator declaration paths into the package.
 // witness: tsconfig.build.json
 // remove-when: TypeScript names the inferred declaration using public SDK exports.
+// concave:invariant validator-identity
+// This public type annotation preserves the inherited runtime validator builder
+// and its markers; it changes no serialized value or accepted schema.
 export const vv: ReturnType<typeof typedV<typeof schema>> = typedV(schema);
 // concave:end portable-validator-type
 export { vv as v };

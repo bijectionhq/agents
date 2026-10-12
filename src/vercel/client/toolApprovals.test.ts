@@ -733,9 +733,13 @@ describe("tool approval semantics", () => {
 
     expect(executed).toEqual(["a", "b"]);
     // concave:begin handler-owned-message-options
+    // preserves: src/vercel/client/toolApprovals.test.ts#message-options
     // why: The handler processes stored context; the new result of call-b is produced afterward by the AI SDK. Assert every handled message retains its options, without attributing handler changes to future output.
     // witness: src/vercel/client/toolApprovals.test.ts
     // remove-when: Upstream tests distinguish stored context from newly executed tool results.
+    // concave:invariant message-options
+    // Stored context messages retain the options applied by their handler; a new
+    // tool result is produced after that handler and is not its retained input.
     const prompt = lastModelPrompt();
     const handled = prompt.filter(
       (message) => !(message.role === "tool" && message.content.some(
