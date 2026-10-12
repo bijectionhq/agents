@@ -227,7 +227,7 @@
       "replacements": [
         {
           "from": ".DS_Store\n.idea\n*.local\n*.log\n/.vscode/\n/docs/.vitepress/cache\ndist\ndist-ssr\nexplorations\nnode_modules\n.eslintcache\n\n# this is a package-json-redirect stub dir, see https://github.com/andrewbranch/example-subpath-exports-ts-compat?tab=readme-ov-file\nreact/package.json\n# npm pack output\n*.tgz\n\n*.tsbuildinfo\n.claude\n.mcp.json\n",
-          "to": ".DS_Store\n.idea\n*.local\n*.log\n/.vscode/\n/docs/.vitepress/cache\ndist\ndist-ssr\nexplorations\nnode_modules\n.eslintcache\n\n# this is a package-json-redirect stub dir, see https://github.com/andrewbranch/example-subpath-exports-ts-compat?tab=readme-ov-file\nreact/package.json\n# npm pack output\n*.tgz\n\n*.tsbuildinfo\n.claude\n.mcp.json\n\n# Source-preservation tooling is source, including its coverage package.\n!/tools/\n!/tools/**\n\n/target/\n/node_modules/\n/dist/\n"
+          "to": ".DS_Store\n.idea\n*.local\n*.log\n/.vscode/\n/docs/.vitepress/cache\ndist\ndist-ssr\nexplorations\nnode_modules\n.eslintcache\n\n# this is a package-json-redirect stub dir, see https://github.com/andrewbranch/example-subpath-exports-ts-compat?tab=readme-ov-file\nreact/package.json\n# npm pack output\n*.tgz\n\n*.tsbuildinfo\n.claude\n.mcp.json\n\n# Source-preservation tooling is source, including its coverage package.\n!/tools/\n!/tools/**\n\n/target/\n/node_modules/\n/dist/\n\n# Checker dependencies and runtime output are rebuildable, never source.\n/tools/concave/**/node_modules/\n/tools/concave/target/\n"
         }
       ],
       "explanation": {

@@ -26,3 +26,7 @@ react/package.json
 /target/
 /node_modules/
 /dist/
+
+# Checker dependencies and runtime output are rebuildable, never source.
+/tools/concave/**/node_modules/
+/tools/concave/target/
