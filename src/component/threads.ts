@@ -1,8 +1,8 @@
-import { assert, omit, pick } from "convex-helpers";
-import { paginator } from "convex-helpers/server/pagination";
-import { partial } from "convex-helpers/validators";
-import { paginationOptsValidator } from "convex/server";
-import type { ObjectType } from "convex/values";
+import { assert, omit, pick } from "@bijectionhq/helpers";
+import { paginator } from "@bijectionhq/helpers/server/pagination";
+import { partial } from "@bijectionhq/helpers/validators";
+import { paginationOptsValidator } from "bijection/server";
+import type { ObjectType } from "bijection/values";
 import {
   type ThreadDoc,
   vPaginationResult,

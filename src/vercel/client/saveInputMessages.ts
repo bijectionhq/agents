@@ -9,7 +9,7 @@ import type {
 } from "./types.js";
 import { saveMessages } from "./messages.js";
 import type { Message } from "../../validators.js";
-import { assert } from "convex-helpers";
+import { assert } from "@bijectionhq/helpers";
 import type { VectorDimension } from "../../component/vector/tables.js";
 
 export async function saveInputMessages(

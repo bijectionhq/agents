@@ -7,7 +7,7 @@ import {
   type ToolSet,
   type UIMessageChunk,
 } from "ai";
-import { v } from "convex/values";
+import { v } from "bijection/values";
 import { errorToString } from "../../errors.js";
 import {
   vMessageDoc,

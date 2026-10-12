@@ -45,7 +45,7 @@ import type { ActionCtx, AgentComponent } from "./client/types.js";
 import type { MutationCtx } from "./client/types.js";
 import { MAX_FILE_SIZE, storeFile } from "./client/files.js";
 import { materializeCanonicalToolResultContentFiles } from "./fileMaterialization.js";
-import type { Infer } from "convex/values";
+import type { Infer } from "bijection/values";
 import {
   convertUint8ArrayToBase64,
   type FileData,
@@ -55,7 +55,7 @@ import {
   type ReasoningPart,
   type ToolResultOutput,
 } from "@ai-sdk/provider-utils";
-import { parse, validate } from "convex-helpers/validators";
+import { parse, validate } from "@bijectionhq/helpers/validators";
 import {
   getModelName,
   getProviderName,

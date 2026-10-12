@@ -1,8 +1,8 @@
-import { paginator } from "convex-helpers/server/pagination";
-import { stream } from "convex-helpers/server/stream";
-import { nullable } from "convex-helpers/validators";
-import { paginationOptsValidator } from "convex/server";
-import type { ObjectType } from "convex/values";
+import { paginator } from "@bijectionhq/helpers/server/pagination";
+import { stream } from "@bijectionhq/helpers/server/stream";
+import { nullable } from "@bijectionhq/helpers/validators";
+import { paginationOptsValidator } from "bijection/server";
+import type { ObjectType } from "bijection/values";
 import { vPaginationResult } from "../validators.js";
 import { internal } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";

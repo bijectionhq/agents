@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from "bijection/server";
+import { v } from "bijection/values";
 import {
   vThreadStatus,
   vMessage,
@@ -12,7 +12,7 @@ import {
   vProviderMetadata,
   vReasoningDetails,
 } from "../validators.js";
-import { typedV } from "convex-helpers/validators";
+import { typedV } from "@bijectionhq/helpers/validators";
 import vectorTables, { vVectorId } from "./vector/tables.js";
 
 export const schema = defineSchema({
@@ -181,7 +181,12 @@ export const schema = defineSchema({
   ]),
 });
 
-export const vv = typedV(schema);
+// concave:begin portable-validator-type
+// why: Name the validator builder through its public generic type instead of leaking SDK-private file validator declaration paths into the package.
+// witness: tsconfig.build.json
+// remove-when: TypeScript names the inferred declaration using public SDK exports.
+export const vv: ReturnType<typeof typedV<typeof schema>> = typedV(schema);
+// concave:end portable-validator-type
 export { vv as v };
 
 export default schema;

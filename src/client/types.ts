@@ -8,7 +8,7 @@ import type {
   GenericDataModel,
   GenericMutationCtx,
   GenericQueryCtx,
-} from "convex/server";
+} from "bijection/server";
 import type { ComponentApi } from "../component/_generated/component.js";
 
 export type AgentComponent = ComponentApi;

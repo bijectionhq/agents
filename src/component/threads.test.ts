@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { convexTest } from "convex-test";
+import { bijectionTest } from "@bijectionhq/test";
 import { describe, expect, test, vi } from "vitest";
 import { api, internal } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
@@ -9,7 +9,7 @@ import { modules } from "./setup.test.js";
 
 describe("threads", () => {
   test("createThread creates a thread with correct data", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread = await t.mutation(api.threads.createThread, {
       userId: "testUser",
@@ -26,7 +26,7 @@ describe("threads", () => {
   });
 
   test("getThread returns thread data", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const created = await t.mutation(api.threads.createThread, {
       userId: "getUser",
@@ -44,7 +44,7 @@ describe("threads", () => {
   });
 
   test("getThread returns null for non-existent thread", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread, then delete it to get a valid but non-existent ID
     const thread = await t.mutation(api.threads.createThread, {
@@ -66,7 +66,7 @@ describe("threads", () => {
   });
 
   test("listThreadsByUserId returns threads for user", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create threads for different users
     const thread1 = await t.mutation(api.threads.createThread, {
@@ -93,7 +93,7 @@ describe("threads", () => {
   });
 
   test("listThreadsByUserId pagination works", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create multiple threads
     const threads = [];
@@ -126,7 +126,7 @@ describe("threads", () => {
   });
 
   test("listThreadsByUserId ordering works", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create threads with slight delays to ensure different creation times
     const thread1 = await t.mutation(api.threads.createThread, {
@@ -162,7 +162,7 @@ describe("threads", () => {
   });
 
   test("updateThread updates thread fields", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread = await t.mutation(api.threads.createThread, {
       userId: "updateUser",
@@ -186,7 +186,7 @@ describe("threads", () => {
   });
 
   test("updateThread with partial patch works", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread = await t.mutation(api.threads.createThread, {
       userId: "partialUser",
@@ -207,7 +207,7 @@ describe("threads", () => {
   });
 
   test("updateThread throws error for non-existent thread", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread, then delete it to get a valid but non-existent ID
     const thread = await t.mutation(api.threads.createThread, {
@@ -230,7 +230,7 @@ describe("threads", () => {
   });
 
   test("deleteAllForThreadIdSync deletes thread and all related data", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with messages
     const thread = await t.mutation(api.threads.createThread, {
@@ -285,7 +285,7 @@ describe("threads", () => {
     // Enable fake timers for scheduled function testing
     vi.useFakeTimers();
 
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with messages
     const thread = await t.mutation(api.threads.createThread, {
@@ -331,7 +331,7 @@ describe("threads", () => {
   });
 
   test("deletePageForThreadId handles pagination correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with many messages to test pagination
     const thread = await t.mutation(api.threads.createThread, {
@@ -382,7 +382,7 @@ describe("threads", () => {
   });
 
   test("deletePageForThreadId with custom limit works", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with messages
     const thread = await t.mutation(api.threads.createThread, {
@@ -417,7 +417,7 @@ describe("threads", () => {
     // Enable fake timers for scheduled function testing
     vi.useFakeTimers();
 
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with many messages to force multiple scheduling iterations
     const thread = await t.mutation(api.threads.createThread, {
@@ -461,7 +461,7 @@ describe("threads", () => {
   test("deleteAllForThreadIdAsync preserves its limit across continuations", async () => {
     vi.useFakeTimers();
 
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "boundedDeleteUser",
       title: "Bounded Delete Thread",
@@ -498,7 +498,7 @@ describe("threads", () => {
   });
 
   test("deleteAllForThreadIdSync handles thread with no messages", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with no messages
     const thread = await t.mutation(api.threads.createThread, {
@@ -521,7 +521,7 @@ describe("threads", () => {
   });
 
   test("deleteAllForThreadIdSync handles non-existent thread", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread, then delete it to get a valid but non-existent ID
     const thread = await t.mutation(api.threads.createThread, {
@@ -543,7 +543,7 @@ describe("threads", () => {
   });
 
   test("thread creation sets status to active by default", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread = await t.mutation(api.threads.createThread, {
       userId: "statusUser",
@@ -554,7 +554,7 @@ describe("threads", () => {
   });
 
   test("multiple threads for same user work correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const threads = [];
     for (let i = 0; i < 3; i++) {
@@ -576,7 +576,7 @@ describe("threads", () => {
   });
 
   test("threads with different users are isolated", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread1 = await t.mutation(api.threads.createThread, {
       userId: "user1",

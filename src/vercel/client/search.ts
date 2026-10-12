@@ -3,7 +3,7 @@ import {
   type EmbeddingModel,
   type ModelMessage,
 } from "ai";
-import { assert } from "convex-helpers";
+import { assert } from "@bijectionhq/helpers";
 import type { MessageDoc } from "../../validators.js";
 import {
   validateVectorDimension,
@@ -757,7 +757,7 @@ export async function fetchContextWithPrompt(
   processedMessages = autoDenyUnresolvedApprovals(processedMessages);
 
   // Process messages to inline localhost files (if not, file urls pointing to localhost will be sent to LLM providers)
-  if (process.env.CONVEX_CLOUD_URL?.startsWith("http://127.0.0.1")) {
+  if (process.env.BIJECTION_CLOUD_URL?.startsWith("http://127.0.0.1")) {
     processedMessages = await inlineMessagesFiles(processedMessages);
   }
 

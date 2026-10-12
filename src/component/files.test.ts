@@ -1,17 +1,17 @@
 /// <reference types="vite/client" />
 
-import { convexTest } from "convex-test";
+import { bijectionTest } from "@bijectionhq/test";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { api } from "./_generated/api.js";
 import schema from "./schema.js";
 import { modules } from "./setup.test.js";
 import type { Doc } from "./_generated/dataModel.js";
-import type { PaginationResult } from "convex/server";
+import type { PaginationResult } from "bijection/server";
 
 describe("files", () => {
   afterEach(() => vi.useRealTimers());
   test("addFile registers and reuses a file without acquiring ownership", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const storageId = "storage-1";
     const hash = "hash-1";
     const filename = "file.txt";
@@ -57,7 +57,7 @@ describe("files", () => {
   });
 
   test("useExistingFile only matches files with the same hash and filename", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const storageId = "storage-2";
     const hash = "hash-2";
     const filename = "file2.txt";
@@ -88,7 +88,7 @@ describe("files", () => {
   });
 
   test("reuses a legacy file row with no media type", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const fileId = await t.run((ctx) =>
       ctx.db.insert("files", {
         storageId: "legacy-storage",
@@ -112,7 +112,7 @@ describe("files", () => {
   test("getFilesToDelete paginates through files with refcount 0 one at a time", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-01T00:00:00.000Z"));
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     // Add 3 files with refcount 0
     const files = [];
     for (let i = 0; i < 3; i++) {
@@ -154,7 +154,7 @@ describe("files", () => {
   });
 
   test("does not expose or delete freshly registered files", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
     const { fileId } = await t.mutation(api.files.addFile, {
       storageId: "storage-fresh",
@@ -178,7 +178,7 @@ describe("files", () => {
   test("refreshes a cache hit before the cleanup grace period expires", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-01T00:00:00.000Z"));
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const { fileId } = await t.mutation(api.files.addFile, {
       storageId: "storage-cache-hit",
       hash: "cache-hit-hash",

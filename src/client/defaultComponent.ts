@@ -1,4 +1,4 @@
-import { componentsGeneric } from "convex/server";
+import { componentsGeneric } from "bijection/server";
 import type { AgentComponent } from "./types.js";
 
 export type CustomComponent = {

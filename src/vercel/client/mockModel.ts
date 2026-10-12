@@ -4,7 +4,7 @@ import type {
   LanguageModelV4StreamPart,
 } from "@ai-sdk/provider";
 import { simulateReadableStream, type ProviderMetadata } from "ai";
-import { assert, pick } from "convex-helpers";
+import { assert, pick } from "@bijectionhq/helpers";
 
 export const DEFAULT_TEXT = `
 A A A A A A A A A A A A A A A

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { createThread } from "../../client/threads.js";
-import type { GenericSchema, SchemaDefinition } from "convex/server";
+import type { GenericSchema, SchemaDefinition } from "bijection/server";
 import { streamText } from "ai";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { mockModel } from "./mockModel.js";
 import {
   compressUIMessageChunks,
@@ -13,7 +13,7 @@ import {
   getParts,
   deriveUIMessagesFromDeltas,
 } from "../deltas.js";
-import type { TestConvex } from "convex-test";
+import type { TestBijection } from "@bijectionhq/test";
 import type { StreamDelta, StreamMessage } from "../../validators.js";
 import { dedupeMessages } from "../react/useUIMessages.js";
 
@@ -42,18 +42,18 @@ const testMetadata = {
 // ============================================================================
 
 describe("HTTP Streaming Initiation", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
 
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
 
   test("DeltaStreamer creates a stream on first addParts call", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -69,7 +69,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("DeltaStreamer.getStreamId creates the stream lazily", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -85,7 +85,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("DeltaStreamer.getStreamId returns the same ID on repeated calls", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -100,7 +100,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("Stream is created with streaming state", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -122,7 +122,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("consumeStream processes full AI SDK stream to deltas", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -157,7 +157,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("consumeStream transitions stream to finished state", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -191,7 +191,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("finishHandledExternally prevents consumeStream from calling finish", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -230,7 +230,7 @@ describe("HTTP Streaming Initiation", () => {
   });
 
   test("flushAndStopAccepting drops later parts but keeps the row streaming", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -263,18 +263,18 @@ describe("HTTP Streaming Initiation", () => {
 // ============================================================================
 
 describe("Stream Exclusion Logic", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
 
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
 
   test("list defaults to only streaming status", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // Create a stream and finish it
       const streamer1 = new DeltaStreamer(
         components.agent,
@@ -309,7 +309,7 @@ describe("Stream Exclusion Logic", () => {
   });
 
   test("list with includeStatuses filters correctly", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // Create and finish a stream
       const finishedStreamer = new DeltaStreamer(
         components.agent,
@@ -375,7 +375,7 @@ describe("Stream Exclusion Logic", () => {
   });
 
   test("startOrder filters out streams with lower order", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // Create streams at different orders
       for (const order of [0, 1, 2, 3]) {
         const streamer = new DeltaStreamer(
@@ -400,7 +400,7 @@ describe("Stream Exclusion Logic", () => {
 
   test("streams from different threads are isolated", async () => {
     let threadId2: string;
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       threadId2 = await createThread(ctx, components.agent, {});
 
       // Create a stream in thread 1
@@ -472,18 +472,18 @@ describe("Stream Exclusion Logic", () => {
 // ============================================================================
 
 describe("Delta Stream Consumption", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
 
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
 
   test("cursor-based incremental delta fetching", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -529,7 +529,7 @@ describe("Delta Stream Consumption", () => {
   });
 
   test("multi-stream delta fetching with separate cursors", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // Create two streams with different content
       const streamer1 = new DeltaStreamer(
         components.agent,
@@ -576,7 +576,7 @@ describe("Delta Stream Consumption", () => {
   });
 
   test("deriveUIMessagesFromDeltas reconstructs messages from UIMessageChunk format", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -618,7 +618,7 @@ describe("Delta Stream Consumption", () => {
   });
 
   test("compression merges consecutive text deltas", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -714,18 +714,18 @@ describe("Delta Stream Consumption", () => {
 // ============================================================================
 
 describe("Fallback Behavior", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
 
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
 
   test("aborted stream transitions to aborted state", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -753,7 +753,7 @@ describe("Fallback Behavior", () => {
   });
 
   test("abort via abortByOrder aborts all streams at that order", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // Create two streams at the same order (different stepOrders)
       const s1 = new DeltaStreamer(
         components.agent,
@@ -793,7 +793,7 @@ describe("Fallback Behavior", () => {
   });
 
   test("fail on already-aborted stream is a no-op", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -817,7 +817,7 @@ describe("Fallback Behavior", () => {
   });
 
   test("finish on non-existent stream is a no-op", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -922,18 +922,18 @@ describe("Fallback Behavior", () => {
 // ============================================================================
 
 describe("Stream Lifecycle Integration", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
 
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
 
   test("full lifecycle: create -> stream -> finish -> derive messages", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       // 1. Create the stream
       const streamer = new DeltaStreamer(
         components.agent,
@@ -990,7 +990,7 @@ describe("Stream Lifecycle Integration", () => {
   });
 
   test("full lifecycle: create -> partial stream -> abort -> derive aborted messages", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -1027,7 +1027,7 @@ describe("Stream Lifecycle Integration", () => {
   });
 
   test("multiple concurrent streams in same thread", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamers = [];
       for (let i = 0; i < 3; i++) {
         const streamer = new DeltaStreamer(
@@ -1074,7 +1074,7 @@ describe("Stream Lifecycle Integration", () => {
   });
 
   test("stream deletion removes both stream and its deltas", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,

@@ -4,18 +4,18 @@ import {
   type BetterOmit,
   type ErrorMessage,
   type Expand,
-} from "convex-helpers";
-import { usePaginatedQuery } from "convex-helpers/react";
+} from "@bijectionhq/helpers";
+import { usePaginatedQuery } from "@bijectionhq/helpers/react";
 import {
   type PaginatedQueryArgs,
   type UsePaginatedQueryResult,
-} from "convex/react";
+} from "bijection/react";
 import type {
   FunctionArgs,
   FunctionReference,
   PaginationOptions,
   PaginationResult,
-} from "convex/server";
+} from "bijection/server";
 import { useMemo, useState, useEffect, useRef } from "react";
 import type { SyncStreamsReturnValue } from "../client/types.js";
 import { sorted } from "../../shared.js";

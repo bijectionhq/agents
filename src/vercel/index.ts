@@ -38,7 +38,7 @@ function warnDeprecation(key: string, message: string) {
     console.warn(`[@convex-dev/agent] ${message}\n  See: ${MIGRATION_URL}`);
   }
 }
-import { assert, omit, pick } from "convex-helpers";
+import { assert, omit, pick } from "@bijectionhq/helpers";
 import {
   internalActionGeneric,
   internalMutationGeneric,
@@ -47,8 +47,8 @@ import {
   type PaginationOptions,
   type PaginationResult,
   type WithoutSystemFields,
-} from "convex/server";
-import { convexToJson, v, type Value } from "convex/values";
+} from "bijection/server";
+import { bijectionToJson, v, type Value } from "bijection/values";
 import type { threadFieldsSupportingPatch } from "../component/threads.js";
 import { type VectorDimension } from "../component/vector/tables.js";
 import {
@@ -260,7 +260,7 @@ export class Agent<
        * Tools that the agent can call out to and get responses from.
        * They can be AI SDK tools (import {tool} from "ai")
        * or tools that have Convex context
-       * (import { createTool } from "@convex-dev/agent")
+       * (import { createTool } from "@bijectionhq/agents")
        */
       tools?: AgentTools;
       /**
@@ -1670,7 +1670,7 @@ export class Agent<
           ...overrides,
         });
         return {
-          object: convexToJson(value.object as Value) as T,
+          object: bijectionToJson(value.object as Value) as T,
           promptMessageId: value.promptMessageId,
           order: value.order,
           finishReason: value.finishReason,

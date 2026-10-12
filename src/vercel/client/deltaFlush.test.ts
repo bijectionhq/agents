@@ -9,9 +9,9 @@ import {
   type ActionBuilder,
   type ApiFromModules,
   type DataModelFromSchemaDefinition,
-} from "convex/server";
-import { v } from "convex/values";
-import { components, initConvexTest } from "./setup.test.js";
+} from "bijection/server";
+import { v } from "bijection/values";
+import { components, initBijectionTest } from "./setup.test.js";
 import { mockModel } from "./mockModel.js";
 
 const schema = defineSchema({});
@@ -92,7 +92,7 @@ const testApi: ApiFromModules<{ fns: { run: typeof run } }>["fns"] =
 describe("throttled deltas flush on time (issue #221)", () => {
   test("the tool call is queryable while the tool is still running", async () => {
     partsSeenDuringTool.length = 0;
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u" }),
     );

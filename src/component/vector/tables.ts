@@ -1,11 +1,11 @@
-import { omit } from "convex-helpers";
-import { literals } from "convex-helpers/validators";
+import { omit } from "@bijectionhq/helpers";
+import { literals } from "@bijectionhq/helpers/validators";
 import {
   defineTable,
   type GenericTableSearchIndexes,
   type SchemaDefinition,
   type TableDefinition,
-} from "convex/server";
+} from "bijection/server";
 import {
   type GenericId,
   type Infer,
@@ -14,7 +14,7 @@ import {
   type VId,
   type VObject,
   type VUnion,
-} from "convex/values";
+} from "bijection/values";
 import type { QueryCtx } from "../_generated/server.js";
 
 // We only generate embeddings for non-tool, non-system messages

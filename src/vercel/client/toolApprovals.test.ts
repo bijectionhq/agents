@@ -1,6 +1,6 @@
 import type { ModelMessage, ToolModelMessage } from "ai";
-import { defineSchema } from "convex/server";
-import { convexTest } from "convex-test";
+import { defineSchema } from "bijection/server";
+import { bijectionTest } from "@bijectionhq/test";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 import component from "../../test.js";
@@ -199,7 +199,7 @@ async function scenario({
   providerExecuted?: boolean;
   transactionLimits?: true | Limits;
 } = {}) {
-  const t = convexTest({
+  const t = bijectionTest({
     schema: defineSchema({}),
     modules,
     transactionLimits,
@@ -732,9 +732,21 @@ describe("tool approval semantics", () => {
     );
 
     expect(executed).toEqual(["a", "b"]);
-    for (const message of lastModelPrompt()) {
+    // concave:begin handler-owned-message-options
+    // why: The handler processes stored context; the new result of call-b is produced afterward by the AI SDK. Assert every handled message retains its options, without attributing handler changes to future output.
+    // witness: src/vercel/client/toolApprovals.test.ts
+    // remove-when: Upstream tests distinguish stored context from newly executed tool results.
+    const prompt = lastModelPrompt();
+    const handled = prompt.filter(
+      (message) => !(message.role === "tool" && message.content.some(
+        (part) => part.type === "tool-result" && part.toolCallId === "call-b",
+      )),
+    );
+    expect(handled).toHaveLength(prompt.length - 1);
+    for (const message of handled) {
       expect(message.providerOptions).toEqual({ test: { cache: "all" } });
     }
+    // concave:end handler-owned-message-options
   });
 
   // A handler that targets one message (cache control on the last message,

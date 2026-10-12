@@ -1,5 +1,5 @@
-import { omit, pick } from "convex-helpers";
-import { v } from "convex/values";
+import { omit, pick } from "@bijectionhq/helpers";
+import { v } from "bijection/values";
 import {
   type MessageWithMetadataInternal,
   type StreamDelta,
@@ -17,10 +17,10 @@ import {
   action,
 } from "./_generated/server.js";
 import schema from "./schema.js";
-import { stream } from "convex-helpers/server/stream";
-import { mergedStream } from "convex-helpers/server/stream";
-import { paginator } from "convex-helpers/server/pagination";
-import type { WithoutSystemFields } from "convex/server";
+import { stream } from "@bijectionhq/helpers/server/stream";
+import { mergedStream } from "@bijectionhq/helpers/server/stream";
+import { paginator } from "@bijectionhq/helpers/server/pagination";
+import type { WithoutSystemFields } from "bijection/server";
 import {
   getPersistedUIMessageChunkParts,
   projectPersistedUIMessageChunks,
@@ -38,7 +38,7 @@ export const MAX_MATERIALIZATION_BYTES = 8 * 1024 * 1024;
 export const MAX_MATERIALIZATION_ROWS = 16_000;
 export const MAX_MATERIALIZATION_STREAMS = 10;
 
-// Mirrors convex/values size.js; getConvexSize is newer than the oldest
+// Mirrors convex/values size.js; getBijectionSize is newer than the oldest
 // convex this package supports.
 export function convexValueSize(value: unknown): number {
   if (value === undefined) return 0;

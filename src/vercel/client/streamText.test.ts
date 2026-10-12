@@ -7,10 +7,10 @@ import {
   type ActionBuilder,
   actionGeneric,
   anyApi,
-} from "convex/server";
-import { v } from "convex/values";
+} from "bijection/server";
+import { v } from "bijection/values";
 import type { LanguageModelV4Source } from "@ai-sdk/provider";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { mockModel } from "./mockModel.js";
 import { runStreamCleanup } from "./streamText.js";
 import type { StreamingOptions } from "./streaming.js";
@@ -351,7 +351,7 @@ describe("streamText source visibility", () => {
   ])(
     "keeps awaited deltas healthy with sources $name",
     async ({ sendSources }) => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
       const threadId = await t.run(async (ctx) =>
         createThread(ctx, components.agent, { userId: "u1" }),
       );
@@ -426,7 +426,7 @@ describe("streamText source visibility", () => {
 
 describe("streamText with saveStreamDeltas.returnImmediately (issue #265)", () => {
   test("persists the final assistant text to the messages table", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -501,7 +501,7 @@ describe("streamText abort cleanup", () => {
   });
 
   test("surfaces a cleanup failure without hiding the provider error", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -539,7 +539,7 @@ describe("streamText with an empty final step (issue #274)", () => {
   ])(
     "finalizes the pending assistant message in the %s path",
     async (_, fn) => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
       const threadId = await t.run(async (ctx) =>
         createThread(ctx, components.agent, { userId: "u1" }),
       );
@@ -585,7 +585,7 @@ describe("streamText with an empty final step (issue #274)", () => {
 
 describe("saveStreamDeltas flushes buffered parts (issue #323)", () => {
   test("deltas hold the full text when the generation outpaces the throttle", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -646,7 +646,7 @@ describe("saveStreamDeltas flushes buffered parts (issue #323)", () => {
   });
 
   test("an out of band abort fails the generation instead of saving it", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -678,7 +678,7 @@ describe("saveStreamDeltas flushes buffered parts (issue #323)", () => {
   });
 
   test("the awaited path captures the stream-level finish chunk", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -727,7 +727,7 @@ describe("saveStreamDeltas flushes buffered parts (issue #323)", () => {
 
 describe("stream finish ownership without message storage", () => {
   test("the row still terminates when saveMessages is none", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -745,7 +745,7 @@ describe("stream finish ownership without message storage", () => {
   });
 
   test("leaves no row behind when the generation produces nothing", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );
@@ -763,7 +763,7 @@ describe("stream finish ownership without message storage", () => {
   });
 
   test("the row still terminates on the returnImmediately path", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "u1" }),
     );

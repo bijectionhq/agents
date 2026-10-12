@@ -5,12 +5,12 @@ import type {
   ApiFromModules,
   ActionBuilder,
   MutationBuilder,
-} from "convex/server";
-import { anyApi, actionGeneric, mutationGeneric } from "convex/server";
-import { v } from "convex/values";
-import { defineSchema } from "convex/server";
+} from "bijection/server";
+import { anyApi, actionGeneric, mutationGeneric } from "bijection/server";
+import { v } from "bijection/values";
+import { defineSchema } from "bijection/server";
 import { stepCountIs, type LanguageModelUsage } from "ai";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { z } from "zod/v4";
 import { mockModel } from "./mockModel.js";
 import type { UsageHandler } from "./types.js";
@@ -432,7 +432,7 @@ const testApi: ApiFromModules<{
 describe("Tool Approval Workflow", () => {
   test("approve: generate → approval request → approve → tool executes → final text", async () => {
     usageCalls.length = 0;
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.action(testApi.testApproveFlow, {});
 
     expect(result.approvalId).toBeDefined();
@@ -470,7 +470,7 @@ describe("Tool Approval Workflow", () => {
 
   test("deny: generate → approval request → deny → model acknowledges denial", async () => {
     usageCalls.length = 0;
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.action(testApi.testDenyFlow, {});
 
     expect(result.approvalId).toBeDefined();
@@ -492,7 +492,7 @@ describe("Tool Approval Workflow", () => {
 
   test("multi-tool: approve two tool calls from the same step", async () => {
     usageCalls.length = 0;
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.action(testApi.testMultiToolApproveFlow, {});
 
     expect(result.approvalCount).toBe(2);
@@ -505,7 +505,7 @@ describe("Tool Approval Workflow", () => {
 
   test("approve remains valid with an intervening thread message", async () => {
     usageCalls.length = 0;
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.action(
       testApi.testApproveFlowWithInterveningMessage,
       {},

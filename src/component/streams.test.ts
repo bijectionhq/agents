@@ -1,17 +1,17 @@
 /// <reference types="vite/client" />
 
-import { convexTest } from "convex-test";
+import { bijectionTest } from "@bijectionhq/test";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { getConvexSize } from "convex/values";
+import { getBijectionSize } from "bijection/values";
 import { convexValueSize } from "./streams.js";
 import { api } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
 import schema from "./schema.js";
-import { initConvexTest, modules } from "./setup.test.js";
+import { initBijectionTest, modules } from "./setup.test.js";
 
 afterEach(() => vi.useRealTimers());
 
-async function seedStream(t: ReturnType<typeof initConvexTest>) {
+async function seedStream(t: ReturnType<typeof initBijectionTest>) {
   const thread = await t.mutation(api.threads.createThread, {
     userId: "stream-files",
   });
@@ -32,7 +32,7 @@ async function seedStream(t: ReturnType<typeof initConvexTest>) {
 
 describe("streams", () => {
   test("listDeltas rejects streams belonging to another thread", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const { streamId } = await seedStream(t);
     const otherThread = await t.mutation(api.threads.createThread, {});
     await t.mutation(api.streams.addDelta, {
@@ -51,7 +51,7 @@ describe("streams", () => {
   });
 
   test("listDeltas skips deleted streams even if deltas remain", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const { threadId, streamId } = await seedStream(t);
     await t.mutation(api.streams.addDelta, {
       streamId,
@@ -70,7 +70,7 @@ describe("streams", () => {
   });
 
   test("stream file ownership flows from addDelta to the final message", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const { threadId, streamId, fileId } = await seedStream(t);
     const url = "https://files.example/stream";
 
@@ -157,7 +157,7 @@ describe("streams", () => {
   test("bulk deletion preserves global stream order across status lanes", async () => {
     vi.useFakeTimers();
 
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "stream-cleanup",
     });
@@ -223,11 +223,11 @@ describe("streams", () => {
     ],
     ["bytes", { parts: [{ type: "file", data: new ArrayBuffer(777) }] }],
   ])("delta sizing matches Convex accounting for %s", (_name, doc) => {
-    expect(convexValueSize(doc)).toBe(getConvexSize(doc));
+    expect(convexValueSize(doc)).toBe(getBijectionSize(doc));
   });
 
   test("sync deletion refuses a stream it cannot delete in one transaction", async () => {
-    const t = convexTest({
+    const t = bijectionTest({
       schema,
       modules,
       transactionLimits: true,
@@ -276,7 +276,7 @@ describe("streams", () => {
   test("async deletion stays within transaction read limits", async () => {
     vi.useFakeTimers();
 
-    const t = convexTest({
+    const t = bijectionTest({
       schema,
       modules,
       transactionLimits: true,
@@ -324,7 +324,7 @@ describe("streams", () => {
   });
 
   test("pages large deltas across streams without gaps", async () => {
-    const t = convexTest({ schema, modules, transactionLimits: true });
+    const t = bijectionTest({ schema, modules, transactionLimits: true });
     const thread = await t.mutation(api.threads.createThread, {
       userId: "large-deltas",
     });

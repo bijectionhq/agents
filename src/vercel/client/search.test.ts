@@ -12,7 +12,7 @@ import {
   type Auth,
   type StorageActionWriter,
   type StorageReader,
-} from "convex/server";
+} from "bijection/server";
 import type { MessageDoc } from "../../validators.js";
 import type { ActionCtx, QueryCtx } from "./types.js";
 import {
@@ -22,7 +22,7 @@ import {
   getPromptArray,
   trimIncompleteOldestOrder,
 } from "./search.js";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { createThread } from "../../client/threads.js";
 import { saveMessages } from "../../client/messages.js";
 
@@ -48,7 +48,7 @@ const createMockMessageDoc = (
 const schema = defineSchema({});
 
 describe("search.ts", () => {
-  let t = initConvexTest(schema);
+  let t = initBijectionTest(schema);
   let mockCtx: ActionCtx;
   let ctx: ActionCtx;
 
@@ -89,7 +89,7 @@ describe("search.ts", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    t = initConvexTest(schema);
+    t = initBijectionTest(schema);
     ctx = {
       runQuery: t.query,
       runAction: t.action,
@@ -105,7 +105,7 @@ describe("search.ts", () => {
     } satisfies ActionCtx;
 
     // Mock process.env to avoid file inlining in tests
-    process.env.CONVEX_CLOUD_URL = "https://example.convex.cloud";
+    process.env.BIJECTION_CLOUD_URL = "https://example.convex.cloud";
   });
 
   describe("getPromptArray", () => {

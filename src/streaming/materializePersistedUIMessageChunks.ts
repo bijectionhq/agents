@@ -6,7 +6,7 @@ import {
   type StreamDelta,
   type StreamMessage,
 } from "../validators.js";
-import { validate } from "convex-helpers/validators";
+import { validate } from "@bijectionhq/helpers/validators";
 import {
   collectContiguousStreamParts,
   createPersistedUIMessageChunkState,

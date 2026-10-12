@@ -1,5 +1,5 @@
-import type { BetterOmit, Expand } from "convex-helpers";
-import type { FunctionArgs, FunctionReference } from "convex/server";
+import type { BetterOmit, Expand } from "@bijectionhq/helpers";
+import type { FunctionArgs, FunctionReference } from "bijection/server";
 import type { SyncStreamsReturnValue } from "../client/types.js";
 import type { StreamArgs } from "../../validators.js";
 

@@ -1,10 +1,10 @@
-import { assert, omit, pick } from "convex-helpers";
-import { mergedStream, stream } from "convex-helpers/server/stream";
+import { assert, omit, pick } from "@bijectionhq/helpers";
+import { mergedStream, stream } from "@bijectionhq/helpers/server/stream";
 import {
   paginationOptsValidator,
   type WithoutSystemFields,
-} from "convex/server";
-import type { ObjectType } from "convex/values";
+} from "bijection/server";
+import type { ObjectType } from "bijection/values";
 import {
   DEFAULT_MESSAGE_RANGE,
   DEFAULT_RECENT_MESSAGES,
@@ -46,7 +46,7 @@ import {
   releaseStreamFileOwnershipByIds,
   abortStreamsAtOrder,
 } from "./streams.js";
-import { partial } from "convex-helpers/validators";
+import { partial } from "@bijectionhq/helpers/validators";
 import {
   APPROVAL_LOOKUP_MESSAGES,
   planToolCallApprovals,

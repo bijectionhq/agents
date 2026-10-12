@@ -19,7 +19,7 @@ import {
   convertUint8ArrayToBase64,
   type ReasoningFilePart,
 } from "@ai-sdk/provider-utils";
-import type { Infer } from "convex/values";
+import type { Infer } from "bijection/values";
 import { toModelMessage, fromModelMessage, toUIFilePart } from "./mapping.js";
 import {
   extractReasoning,
@@ -35,7 +35,7 @@ import type {
   SourcePart,
   vSource,
 } from "../validators.js";
-import { omit, pick } from "convex-helpers";
+import { omit, pick } from "@bijectionhq/helpers";
 
 export type UIStatus = "streaming" | MessageStatus;
 

@@ -1,4 +1,4 @@
-import type { GenericId, Infer } from "convex/values";
+import type { GenericId, Infer } from "bijection/values";
 import { expectTypeOf, test } from "vitest";
 import type {
   ContextOptions,

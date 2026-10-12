@@ -4,39 +4,27 @@
  *
  * THIS CODE IS AUTOMATICALLY GENERATED.
  *
- * To regenerate, run `npx convex dev`.
+ * To regenerate, run `bijection dev`.
  * @module
  */
-
-import type {
-  DataModelFromSchemaDefinition,
-  DocumentByName,
-  TableNamesInDataModel,
-  SystemTableNames,
-} from "convex/server";
-import type { GenericId } from "convex/values";
+import type { DataModelFromSchemaDefinition, DocumentByName, TableNamesInDataModel, SystemTableNames, } from "bijection/server";
+import type { GenericId } from "bijection/values";
 import schema from "../schema.js";
-
 /**
- * The names of all of your Convex tables.
+ * The names of all of your Bijection tables.
  */
 export type TableNames = TableNamesInDataModel<DataModel>;
-
 /**
- * The type of a document stored in Convex.
+ * The type of a document stored in Bijection.
  *
  * @typeParam TableName - A string literal type of the table name (like "users").
  */
-export type Doc<TableName extends TableNames> = DocumentByName<
-  DataModel,
-  TableName
->;
-
+export type Doc<TableName extends TableNames> = DocumentByName<DataModel, TableName>;
 /**
- * An identifier for a document in Convex.
+ * An identifier for a document in Bijection.
  *
- * Convex documents are uniquely identified by their `Id`, which is accessible
- * on the `_id` field. To learn more, see [Document IDs](https://docs.convex.dev/using/document-ids).
+ * Bijection documents are uniquely identified by their `Id`, which is accessible
+ * on the `_id` field. To learn more, see [Document IDs](https://docs.bijection.com/database/document-ids).
  *
  * Documents can be loaded using `db.get(tableName, id)` in query and mutation functions.
  *
@@ -45,11 +33,9 @@ export type Doc<TableName extends TableNames> = DocumentByName<
  *
  * @typeParam TableName - A string literal type of the table name (like "users").
  */
-export type Id<TableName extends TableNames | SystemTableNames> =
-  GenericId<TableName>;
-
+export type Id<TableName extends TableNames | SystemTableNames> = GenericId<TableName>;
 /**
- * A type describing your Convex data model.
+ * A type describing your Bijection data model.
  *
  * This type includes information about what tables you have, the type of
  * documents stored in those tables, and the indexes defined on them.

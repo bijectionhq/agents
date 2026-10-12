@@ -12,7 +12,7 @@ import type {
   ToolSet,
 } from "ai";
 import { tool } from "ai";
-import type { GenericActionCtx, GenericDataModel } from "convex/server";
+import type { GenericActionCtx, GenericDataModel } from "bijection/server";
 import type { ProviderOptions } from "../../validators.js";
 import type { Agent } from "../index.js";
 

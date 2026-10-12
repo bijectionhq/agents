@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import type { FunctionReference } from "convex/server";
+import type { FunctionReference } from "bijection/server";
 import type { WorkflowCtx } from "@convex-dev/workflow";
 import { runMutation, runQuery } from "./run.js";
 import type { MutationCtx } from "./types.js";

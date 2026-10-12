@@ -1,0 +1,14 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "portable-validator-type",
+      "path": "src/component/schema.ts",
+      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
+      "start": 183,
+      "end": 184,
+      "replacement_sha256": "6aece56920d730c7b74241dae2e4b7cc77d644eded694b158f75306d3d6c96ba",
+      "fence": true
+    }
+  ]
+}

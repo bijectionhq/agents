@@ -1,4 +1,4 @@
-import type { PaginationOptions, PaginationResult } from "convex/server";
+import type { PaginationOptions, PaginationResult } from "bijection/server";
 import type { MessageDoc } from "../validators.js";
 import { validateVectorDimension } from "../component/vector/tables.js";
 import {
@@ -15,7 +15,7 @@ import type {
   QueryCtx,
   ActionCtx,
 } from "./types.js";
-import { parse } from "convex-helpers/validators";
+import { parse } from "@bijectionhq/helpers/validators";
 import { runMutation, runQuery } from "./run.js";
 
 /**

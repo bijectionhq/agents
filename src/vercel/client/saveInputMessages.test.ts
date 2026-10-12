@@ -6,8 +6,8 @@ import {
   defineSchema,
   type Auth,
   type StorageActionWriter,
-} from "convex/server";
-import { initConvexTest } from "./setup.test.js";
+} from "bijection/server";
+import { initBijectionTest } from "./setup.test.js";
 import { components } from "./setup.test.js";
 
 const schema = defineSchema({});
@@ -61,12 +61,12 @@ describe("saveInputMessages", () => {
 
   const mockComponent = components.agent;
 
-  let t = initConvexTest(schema);
+  let t = initBijectionTest(schema);
   let ctx: ActionCtx;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    t = initConvexTest(schema);
+    t = initBijectionTest(schema);
     ctx = {
       runQuery: t.query,
       runAction: t.action,
@@ -91,7 +91,7 @@ describe("saveInputMessages", () => {
 
   describe("saveMessages: 'all' scenarios", () => {
     test("should save all messages and prompt when storageOptions.saveMessages is 'all'", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = "Test prompt";
@@ -136,7 +136,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should save all with promptMessageId provided (no new messages saved)", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         // Mock saveMessages to return only pending message
@@ -174,7 +174,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should save all with only prompt messages provided", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = [
@@ -202,7 +202,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should save all with both prompt and messages provided", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = "Single prompt";
@@ -234,7 +234,7 @@ describe("saveInputMessages", () => {
 
   describe("saveMessages: 'promptAndOutput' scenarios", () => {
     test("should save only prompt when storageOptions.saveMessages is 'promptAndOutput'", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = "Test prompt";
@@ -267,7 +267,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should save prompt array when provided with promptAndOutput", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = [
@@ -296,7 +296,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should save last message when no prompt provided with promptAndOutput", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const messages = [
@@ -325,7 +325,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should handle promptMessageId with promptAndOutput (no new messages saved)", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         // Mock saveMessages to return only pending message
@@ -444,7 +444,7 @@ describe("saveInputMessages", () => {
 
   describe("edge cases and validation", () => {
     test("should handle empty prompt and messages gracefully", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         // Mock saveMessages to return only pending message
@@ -474,7 +474,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should default to 'promptAndOutput' when storageOptions.saveMessages is not specified", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const prompt = "Test prompt";
@@ -504,7 +504,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should always include pending message in saved messages", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         const result = await saveInputMessages(ctx, mockComponent, {
@@ -526,7 +526,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should return correct promptMessageId when messages are saved", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         // Mock saveMessages to return multiple messages
@@ -560,7 +560,7 @@ describe("saveInputMessages", () => {
     });
 
     test("should use provided promptMessageId when no new messages are saved", async () => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
 
       await t.run(async (ctx) => {
         mockSaveMessages.mockResolvedValueOnce({

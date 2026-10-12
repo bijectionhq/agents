@@ -2,16 +2,16 @@
 
 import type { StreamQuery, StreamQueryArgs } from "./types.js";
 import type { SyncStreamsReturnValue } from "../client/types.js";
-import type { FunctionArgs } from "convex/server";
+import type { FunctionArgs } from "bijection/server";
 import type {
   StreamArgs,
   StreamDelta,
   StreamMessage,
 } from "../../validators.js";
 import { sorted } from "../../shared.js";
-import { useQuery } from "convex/react";
+import { useQuery } from "bijection/react";
 import { useState } from "react";
-import { assert } from "convex-helpers";
+import { assert } from "@bijectionhq/helpers";
 
 export function useDeltaStreams<
   Query extends StreamQuery<any> = StreamQuery<object>,

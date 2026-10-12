@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { createThread } from "../../client/threads.js";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { DeltaStreamer } from "./streaming.js";
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 test("publishes a quiet tail after preparing an earlier batch takes time", async () => {
-  const t = initConvexTest();
+  const t = initBijectionTest();
   let releasePreparation!: () => void;
   let enteredPreparation!: () => void;
   const preparing = new Promise<void>((resolve) => {
@@ -81,7 +81,7 @@ test("publishes a quiet tail after preparing an earlier batch takes time", async
 });
 
 test("a wake armed during a write respects the deadline that write set", async () => {
-  const t = initConvexTest();
+  const t = initBijectionTest();
   let releasePreparation!: () => void;
   let enteredPreparation!: () => void;
   const preparing = new Promise<void>((resolve) => {

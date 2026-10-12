@@ -13,8 +13,8 @@ import type {
   QueryCtx,
 } from "./types.js";
 import type { Message } from "../../validators.js";
-import { assert } from "convex-helpers";
-import type { StorageReader } from "convex/server";
+import { assert } from "@bijectionhq/helpers";
+import type { StorageReader } from "bijection/server";
 
 export const MAX_FILE_SIZE = 1024 * 64;
 

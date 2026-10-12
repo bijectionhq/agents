@@ -1,9 +1,9 @@
-import { paginator } from "convex-helpers/server/pagination";
+import { paginator } from "@bijectionhq/helpers/server/pagination";
 import type { Doc, Id } from "./_generated/dataModel.js";
 import { mutation, type MutationCtx, query } from "./_generated/server.js";
 import { schema, v } from "./schema.js";
-import { paginationOptsValidator } from "convex/server";
-import type { Infer } from "convex/values";
+import { paginationOptsValidator } from "bijection/server";
+import type { Infer } from "bijection/values";
 
 const FILE_CLEANUP_GRACE_MS = 24 * 60 * 60 * 1000;
 

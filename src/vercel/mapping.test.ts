@@ -18,7 +18,7 @@ import { vMessage, vToolResultPart } from "../validators.js";
 import fs from "fs";
 import path from "path";
 import type { SerializedContent } from "./mapping.js";
-import { validate } from "convex-helpers/validators";
+import { validate } from "@bijectionhq/helpers/validators";
 import type {
   FilePart,
   ModelMessage,
@@ -27,7 +27,7 @@ import type {
   ToolSet,
   CallWarning,
 } from "ai";
-import type { Infer } from "convex/values";
+import type { Infer } from "bijection/values";
 import { mockModel } from "./client/mockModel.js";
 
 const testAssetsDir = path.join(__dirname, "../../test-assets");

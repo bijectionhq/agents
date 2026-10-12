@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validate } from "convex-helpers/validators";
+import { validate } from "@bijectionhq/helpers/validators";
 import {
   type StreamDelta,
   type StreamMessage,

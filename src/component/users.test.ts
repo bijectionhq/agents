@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { convexTest } from "convex-test";
+import { bijectionTest } from "@bijectionhq/test";
 import { describe, expect, test, vi } from "vitest";
 import { api, internal } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
@@ -9,7 +9,7 @@ import { modules } from "./setup.test.js";
 
 describe("users", () => {
   test("listUsersWithThreads returns users who have threads", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create two users with threads and one without
     await t.mutation(api.threads.createThread, {
@@ -35,7 +35,7 @@ describe("users", () => {
   });
 
   test("listUsersWithThreads pagination works", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create multiple users with threads
     for (let i = 0; i < 5; i++) {
@@ -64,7 +64,7 @@ describe("users", () => {
   });
 
   test("deleteAllForUserId sync deletes all threads and messages for a user", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a user with multiple threads and messages
     const thread1 = await t.mutation(api.threads.createThread, {
@@ -140,7 +140,7 @@ describe("users", () => {
     // Enable fake timers for scheduled function testing
     vi.useFakeTimers();
 
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a user with a thread and messages
     const thread = await t.mutation(api.threads.createThread, {
@@ -181,7 +181,7 @@ describe("users", () => {
   });
 
   test("deletePageForUserId handles messages phase correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with many messages to test pagination
     const thread = await t.mutation(api.threads.createThread, {
@@ -239,7 +239,7 @@ describe("users", () => {
   });
 
   test("deletePageForUserId handles streams phase correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread with messages (no streams for this test)
     const thread = await t.mutation(api.threads.createThread, {
@@ -294,7 +294,7 @@ describe("users", () => {
   });
 
   test("deletePageForUserId handles multiple threads correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create multiple threads for the same user
     const thread1 = await t.mutation(api.threads.createThread, {
@@ -378,7 +378,7 @@ describe("users", () => {
     // Enable fake timers for scheduled function testing
     vi.useFakeTimers();
 
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a user with multiple threads and many messages to force multiple scheduling iterations
     const thread1 = await t.mutation(api.threads.createThread, {
@@ -428,7 +428,7 @@ describe("users", () => {
   });
 
   test("getThreadUserId returns correct userId", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     const thread = await t.mutation(api.threads.createThread, {
       userId: "testUserId",
@@ -443,7 +443,7 @@ describe("users", () => {
   });
 
   test("getThreadUserId returns null for non-existent thread", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Create a thread, then delete it to get a valid but non-existent ID
     const thread = await t.mutation(api.threads.createThread, {
@@ -465,7 +465,7 @@ describe("users", () => {
   });
 
   test("deleteAllForUserId handles user with no threads", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     // Try to delete for a user that doesn't exist
     await expect(

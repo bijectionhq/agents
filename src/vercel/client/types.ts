@@ -30,7 +30,7 @@ import type {
   GenericActionCtx,
   GenericDataModel,
   WithoutSystemFields,
-} from "convex/server";
+} from "bijection/server";
 import type {
   MessageDoc,
   ProviderMetadata,

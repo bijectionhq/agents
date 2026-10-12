@@ -8,8 +8,8 @@ import {
   type GenericDataModel,
   type GenericMutationCtx,
   type GenericQueryCtx,
-} from "convex/server";
-import { v } from "convex/values";
+} from "bijection/server";
+import { v } from "bijection/values";
 import type { Instructions } from "ai";
 import {
   vContextOptions,

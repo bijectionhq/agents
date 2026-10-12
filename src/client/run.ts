@@ -2,7 +2,7 @@ import type {
   FunctionArgs,
   FunctionReference,
   FunctionVisibility,
-} from "convex/server";
+} from "bijection/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./types.js";
 
 /**

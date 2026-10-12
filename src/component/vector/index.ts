@@ -1,6 +1,6 @@
-import { paginator } from "convex-helpers/server/pagination";
-import { mergedStream, stream } from "convex-helpers/server/stream";
-import { v } from "convex/values";
+import { paginator } from "@bijectionhq/helpers/server/pagination";
+import { mergedStream, stream } from "@bijectionhq/helpers/server/stream";
+import { v } from "bijection/values";
 import type { Id } from "../_generated/dataModel.js";
 import {
   type ActionCtx,

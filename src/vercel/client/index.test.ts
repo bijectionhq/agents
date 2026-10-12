@@ -8,23 +8,23 @@ import {
   toUIMessages,
   type MessageDoc,
 } from "../index.js";
-import type { DataModelFromSchemaDefinition } from "convex/server";
+import type { DataModelFromSchemaDefinition } from "bijection/server";
 import {
   anyApi,
   queryGeneric,
   mutationGeneric,
   actionGeneric,
-} from "convex/server";
+} from "bijection/server";
 import type {
   ApiFromModules,
   ActionBuilder,
   MutationBuilder,
   QueryBuilder,
-} from "convex/server";
-import { v } from "convex/values";
-import { defineSchema } from "convex/server";
+} from "bijection/server";
+import { v } from "bijection/values";
+import { defineSchema } from "bijection/server";
 import { stepCountIs } from "ai";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { z } from "zod/v4";
 import { MockLanguageModel, mockModel } from "./mockModel.js";
 
@@ -281,12 +281,12 @@ const testApi: ApiFromModules<{
 
 describe("Agent thick client", () => {
   test("should create a thread", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.mutation(testApi.createThreadManually, {});
     expect(result.threadId).toBeTypeOf("string");
   });
   test("should create a thread and generate text", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const result = await t.action(testApi.createAndGenerate, {});
     expect(result).toBeDefined();
     expect(result).toMatch(TEST_TEXT);
@@ -294,7 +294,7 @@ describe("Agent thick client", () => {
   test.each([true, false])(
     "saveStep persists each SDK 7 step once (previousStep: %s)",
     async (withPreviousStep) => {
-      const t = initConvexTest(schema);
+      const t = initBijectionTest(schema);
       const res = await t.action(testApi.replayStepsViaSaveStep, {
         withPreviousStep,
       });
@@ -379,7 +379,7 @@ describe("filterOutOrphanedToolMessages", () => {
 
 describe("Agent option variations and normal behavior", () => {
   test("raw handler opts into retained SDK 7 request and response bodies", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     await expect(t.action(testApi.captureRawBodies, {})).resolves.toEqual({
       request: { prompt: "request-body" },
       response: { text: "response-body" },
@@ -412,7 +412,7 @@ describe("Agent option variations and normal behavior", () => {
 
 describe("Agent thread management", () => {
   test("createThread returns threadId (mutation context)", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "2" }),
     );
@@ -420,7 +420,7 @@ describe("Agent thread management", () => {
   });
 
   test("continueThread returns thread object", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "3" }),
     );
@@ -434,7 +434,7 @@ describe("Agent thread management", () => {
 
 describe("Agent message operations", () => {
   test("saveMessage and saveMessages store messages", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "4" }),
     );
@@ -462,7 +462,7 @@ describe("Agent message operations", () => {
   });
 
   test("saveMessage can place a standalone assistant message on a new order", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "operator-test" }),
     );
@@ -509,7 +509,7 @@ describe("Agent message operations", () => {
 
 describe("Agent text/object generation", () => {
   test("generateText with custom context and storage options", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "5" }),
     );
@@ -524,7 +524,7 @@ describe("Agent text/object generation", () => {
   });
 
   test("generateObject returns object", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "6" }),
     );
@@ -539,14 +539,14 @@ describe("Agent text/object generation", () => {
 
 describe("Agent-generated mutations/actions/queries", () => {
   test("createThreadMutation works via t.mutation", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     // This test is for the registered mutation, not the agent method
     const result = await t.mutation(testApi.createThreadManually, {});
     expect(result.threadId).toBeTypeOf("string");
   });
 
   test("asTextAction and asObjectAction work via t.action", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "8" }),
     );
@@ -566,7 +566,7 @@ describe("Agent-generated mutations/actions/queries", () => {
   });
 
   test("asTextAction maps its system wire field to AI SDK instructions", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const before = agentModel.doGenerateCalls.length;
 
     await t.action(testApi.generateTextAction, {
@@ -585,7 +585,7 @@ describe("Agent-generated mutations/actions/queries", () => {
   });
 
   test("asSaveMessagesMutation works via t.mutation", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "9" }),
     );
@@ -605,7 +605,7 @@ describe("Agent-generated mutations/actions/queries", () => {
 
 describe("Agent context and search options", () => {
   test("fetchContextMessages returns context messages", async () => {
-    const t = initConvexTest(schema);
+    const t = initBijectionTest(schema);
     const threadId = await t.run(async (ctx) =>
       createThread(ctx, components.agent, { userId: "10" }),
     );

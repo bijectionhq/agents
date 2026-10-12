@@ -1,12 +1,12 @@
-import { insertAtTop } from "convex/react";
+import { insertAtTop } from "bijection/react";
 import type { MessageDoc, StreamArgs } from "../../validators.js";
-import type { OptimisticLocalStore } from "convex/browser";
+import type { OptimisticLocalStore } from "bijection/browser";
 import type { UIMessage } from "../UIMessages.js";
 import type {
   FunctionReference,
   PaginationOptions,
   PaginationResult,
-} from "convex/server";
+} from "bijection/server";
 import type { SyncStreamsReturnValue } from "../client/types.js";
 
 /**

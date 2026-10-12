@@ -1,4 +1,4 @@
-import type { WithoutSystemFields } from "convex/server";
+import type { WithoutSystemFields } from "bijection/server";
 import type { ThreadDoc } from "../validators.js";
 import type {
   ActionCtx,

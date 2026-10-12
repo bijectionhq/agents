@@ -1,5 +1,5 @@
 import type { ModelMessage } from "ai";
-import type { PaginationOptions, PaginationResult } from "convex/server";
+import type { PaginationOptions, PaginationResult } from "bijection/server";
 import type { MessageDoc } from "../../validators.js";
 import {
   type Message,

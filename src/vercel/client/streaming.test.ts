@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { createThread } from "../../client/threads.js";
 import type { MutationCtx } from "../../client/types.js";
-import type { GenericSchema, SchemaDefinition } from "convex/server";
+import type { GenericSchema, SchemaDefinition } from "bijection/server";
 import { streamText } from "ai";
-import { components, initConvexTest } from "./setup.test.js";
+import { components, initBijectionTest } from "./setup.test.js";
 import { mockModel } from "./mockModel.js";
 import {
   compressUIMessageChunks,
@@ -11,7 +11,7 @@ import {
   syncStreams,
 } from "./streaming.js";
 import { getParts } from "../deltas.js";
-import type { TestConvex } from "convex-test";
+import type { TestBijection } from "@bijectionhq/test";
 
 const defaultTestOptions = {
   throttleMs: 0,
@@ -36,8 +36,8 @@ describe("syncStreams", () => {
   test.each(["first", "last"])(
     "rejects a mixed-thread request with the foreign stream %s",
     async (position) => {
-      const t = initConvexTest();
-      await t.run(async (ctx) => {
+      const t = initBijectionTest();
+      await t.action(async (ctx) => {
         const threadId = await createThread(ctx, components.agent, {});
         const otherThreadId = await createThread(ctx, components.agent, {});
         const cursors = [];
@@ -70,8 +70,8 @@ describe("syncStreams", () => {
   );
 
   test("returns same-thread deltas from each stream's cursor", async () => {
-    const t = initConvexTest();
-    await t.run(async (ctx) => {
+    const t = initBijectionTest();
+    await t.action(async (ctx) => {
       const threadId = await createThread(ctx, components.agent, {});
       const cursors = [];
       const expected = [];
@@ -103,16 +103,16 @@ describe("syncStreams", () => {
 });
 
 describe("DeltaStreamer", () => {
-  let t: TestConvex<SchemaDefinition<GenericSchema, boolean>>;
+  let t: TestBijection<SchemaDefinition<GenericSchema, boolean>>;
   let threadId: string;
   beforeEach(async () => {
-    t = initConvexTest();
-    await t.run(async (ctx) => {
+    t = initBijectionTest();
+    await t.action(async (ctx) => {
       threadId = await createThread(ctx, components.agent, {});
     });
   });
   test("should save chunks via DeltaStreamer", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -139,7 +139,7 @@ describe("DeltaStreamer", () => {
     });
   });
   test("should save all parts when throttleMs is 0", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -189,7 +189,7 @@ describe("DeltaStreamer", () => {
   });
 
   test("should save compressed parts via DeltaStreamer", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer(
         components.agent,
         ctx,
@@ -260,7 +260,7 @@ describe("DeltaStreamer", () => {
     const abortController = new AbortController();
     abortController.abort();
 
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer<string>(
         components.agent,
         ctx,
@@ -284,7 +284,7 @@ describe("DeltaStreamer", () => {
   });
 
   test("preserves the public throwing behavior after an existing stream aborts", async () => {
-    await t.run(async (ctx) => {
+    await t.action(async (ctx) => {
       const streamer = new DeltaStreamer<string>(
         components.agent,
         ctx,

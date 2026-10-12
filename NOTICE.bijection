@@ -1,0 +1,4 @@
+Derived from get-convex/agent at 3e5bc1f698877b8ff55bd56f62a76d92cafc2bbd.
+Original copyright, LICENSE and NOTICE are retained.
+Bijection changes module imports, public names and package assembly.
+Native run APIs use the existing engine; no second execution ledger is added.

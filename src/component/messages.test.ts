@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { convexTest } from "convex-test";
+import { bijectionTest } from "@bijectionhq/test";
 import { describe, expect, test, vi } from "vitest";
 import { api } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
@@ -12,11 +12,11 @@ import {
   timeoutStreamHandler,
 } from "./streams.js";
 import schema from "./schema.js";
-import { initConvexTest, modules } from "./setup.test.js";
+import { initBijectionTest, modules } from "./setup.test.js";
 
 describe("agent", () => {
   test("getMaxMessage works for threads", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -37,7 +37,7 @@ describe("agent", () => {
     });
   });
   test("getMaxMessage works for a specific order", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -60,7 +60,7 @@ describe("agent", () => {
   });
 
   test("getMaxMessages works when there are tools involved", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -108,7 +108,7 @@ describe("agent", () => {
   });
 
   test("ordering is incremented on subsequent calls to addMessages for user messages", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -139,7 +139,7 @@ describe("agent", () => {
   });
 
   test("ordering is incremented on subsequent calls to addMessages for assistant messages", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -170,7 +170,7 @@ describe("agent", () => {
   });
 
   test("an explicit order starts, appends, and avoids later order collisions", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -232,7 +232,7 @@ describe("agent", () => {
   });
 
   test("concurrent saves to an explicit order receive distinct step orders", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -256,7 +256,7 @@ describe("agent", () => {
   });
 
   test("next order is allocated after the latest message", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -275,7 +275,7 @@ describe("agent", () => {
   });
 
   test("concurrent next orders receive distinct orders", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -307,7 +307,7 @@ describe("agent", () => {
   });
 
   test("an explicit order ahead of the thread places the batch there", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -331,7 +331,7 @@ describe("agent", () => {
   });
 
   test("an explicit order cannot conflict with another placement argument", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -370,7 +370,7 @@ describe("agent", () => {
   });
 
   test("derived message positions cannot exceed safe integers", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -413,7 +413,7 @@ describe("agent", () => {
   });
 
   test("order is incremented for user messages on to addMessages for the same promptMessageId", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -446,7 +446,7 @@ describe("agent", () => {
   });
 
   test("sub order is incremented on subsequent calls to addMessages for the same promptMessageId", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -479,7 +479,7 @@ describe("agent", () => {
   });
 
   test("adding multiple messages at a promptMessageId skips later messages", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -556,7 +556,7 @@ describe("agent", () => {
   });
 
   test("updateMessage updates message content", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -578,7 +578,7 @@ describe("agent", () => {
   });
 
   test("updateMessage updates message status", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -603,7 +603,7 @@ describe("agent", () => {
   });
 
   test("updateMessage updates error field", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -625,7 +625,7 @@ describe("agent", () => {
   });
 
   test("updateMessage correctly updates tool messages", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -680,7 +680,7 @@ describe("agent", () => {
   });
 
   test("updateMessage throws error for non-existent message", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
 
     await expect(
       t.mutation(api.messages.updateMessage, {
@@ -691,7 +691,7 @@ describe("agent", () => {
   });
 
   test("deleteByIds deletes existing messages and returns their IDs", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -721,7 +721,7 @@ describe("agent", () => {
   });
 
   test("deleteByIds handles non-existent message IDs gracefully", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -752,7 +752,7 @@ describe("agent", () => {
   });
 
   test("deleteByOrder deletes messages within specified order range", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -805,7 +805,7 @@ describe("agent", () => {
   });
 
   test("deleteByOrder handles step order boundaries correctly", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -845,7 +845,7 @@ describe("agent", () => {
   });
 
   test("deleteByOrder returns isDone false when batch limit is reached", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -873,7 +873,7 @@ describe("agent", () => {
   });
 
   test("deleteByOrder handles empty result set", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const thread = await t.mutation(api.threads.createThread, {
       userId: "test",
     });
@@ -906,7 +906,7 @@ describe("agent", () => {
   // searchAllMessagesForUserId, the targetMessage's order should not filter
   // out messages from other threads (their order sequences are independent).
   test("textSearch returns cross-thread matches even when target order is lower", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const userId = "user-256";
 
     // Old thread: build up several messages so the matching one has a high order.
@@ -974,7 +974,7 @@ describe("agent", () => {
   // Regression test for #256: same-thread order filter must still work even
   // when searching across threads.
   test("textSearch still filters same-thread results past the target order", async () => {
-    const t = convexTest(schema, modules);
+    const t = bijectionTest(schema, modules);
     const userId = "user-256-same";
 
     const thread = await t.mutation(api.threads.createThread, { userId });
@@ -1025,10 +1025,10 @@ describe("agent", () => {
   async function pendingWithStreams(
     streamCount = 1,
     transactionLimits: Parameters<
-      typeof convexTest
+      typeof bijectionTest
     >[0]["transactionLimits"] = true,
   ) {
-    const t = convexTest({ schema, modules, transactionLimits });
+    const t = bijectionTest({ schema, modules, transactionLimits });
     const thread = await t.mutation(api.threads.createThread, {
       userId: "bounded-recovery-user",
     });
@@ -1185,7 +1185,7 @@ describe("agent", () => {
   );
 
   test("finalizeMessage commits a failed pending message when stream recovery is malformed", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "recovery-user",
     });
@@ -1240,7 +1240,7 @@ describe("agent", () => {
   });
 
   test("finalizeMessage discards all recovered output when any stream is malformed", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "mixed-recovery-user",
     });
@@ -1337,7 +1337,7 @@ describe("agent", () => {
   });
 
   test("transfers recovered file ownership and releases timed-out streams", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "stream-file-recovery",
     });
@@ -1432,7 +1432,7 @@ describe("late saves racing a failed pending message (issue #320)", () => {
   const PROVIDER_ERROR = "invalid_prompt: Invalid prompt: flagged by policy.";
 
   test("keeps the first durable failure authoritative", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, {
       userId: "u1",
     });
@@ -1498,7 +1498,7 @@ describe("late saves racing a failed pending message (issue #320)", () => {
 
 describe("deleting a message aborts generation writing to it (issue #300)", () => {
   test("a stream at the deleted order is aborted", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, { userId: "u" });
     const threadId = thread._id as Id<"threads">;
 
@@ -1538,7 +1538,7 @@ describe("deleting a message aborts generation writing to it (issue #300)", () =
 
 describe("abandoning a save whose prompt was deleted (issue #300)", () => {
   test("abandons instead of throwing when the caller opts in", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, { userId: "u" });
     const threadId = thread._id as Id<"threads">;
 
@@ -1570,7 +1570,7 @@ describe("abandoning a save whose prompt was deleted (issue #300)", () => {
   });
 
   test("still throws for a caller that did not opt in", async () => {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const thread = await t.mutation(api.threads.createThread, { userId: "u" });
     const threadId = thread._id as Id<"threads">;
 
@@ -1597,7 +1597,7 @@ describe("cloneThread", () => {
   // Five messages across three orders, so a bounded clone has to cross a
   // batch boundary and stop partway through the source.
   async function seed() {
-    const t = initConvexTest();
+    const t = initBijectionTest();
     const source = await t.mutation(api.threads.createThread, {
       userId: "cloner",
     });

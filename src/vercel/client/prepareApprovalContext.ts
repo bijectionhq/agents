@@ -1,5 +1,5 @@
 import type { AssistantModelMessage, ModelMessage, ToolModelMessage } from "ai";
-import { convexToJson, type Value } from "convex/values";
+import { bijectionToJson, type Value } from "bijection/values";
 
 type AssistantPart = Exclude<AssistantModelMessage["content"], string>[number];
 type Request = Extract<AssistantPart, { type: "tool-approval-request" }>;
@@ -320,5 +320,5 @@ function approvalPartSignature(part: ApprovalPart): string {
 }
 
 function signature(value: unknown): string {
-  return JSON.stringify(convexToJson((value ?? null) as Value));
+  return JSON.stringify(bijectionToJson((value ?? null) as Value));
 }

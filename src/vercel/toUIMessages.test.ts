@@ -1,4 +1,4 @@
-import { assert } from "convex-helpers";
+import { assert } from "@bijectionhq/helpers";
 import { describe, expect, it } from "vitest";
 import { toUIMessages } from "./UIMessages.js";
 import type { MessageDoc } from "../validators.js";
