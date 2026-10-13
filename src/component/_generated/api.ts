@@ -15,6 +15,8 @@ import type * as threads from "../threads.js";
 import type * as users from "../users.js";
 import type * as vector_index from "../vector/index.js";
 import type * as vector_tables from "../vector/tables.js";
+import type * as verification from "../verification.js";
+import type * as verificationTables from "../verificationTables.js";
 import type { ApiFromModules } from "bijection/server";
 type FunctionExport<Module, Name extends PropertyKey> = Name extends keyof Module ? Module[Name] : Module extends {
     default: infer Bundle;
@@ -104,6 +106,15 @@ export const api: {
             "updateBatch": FunctionReferenceFor<typeof vector_index, "updateBatch">;
         };
     };
+    "verification": {
+        "attempt": FunctionReferenceFor<typeof verification, "attempt">;
+        "begin": FunctionReferenceFor<typeof verification, "begin">;
+        "cancel": FunctionReferenceFor<typeof verification, "cancel">;
+        "complete": FunctionReferenceFor<typeof verification, "complete">;
+        "current": FunctionReferenceFor<typeof verification, "current">;
+        "inspect": FunctionReferenceFor<typeof verification, "inspect">;
+        "recordAdmission": FunctionReferenceFor<typeof verification, "recordAdmission">;
+    };
 } = anyApi as any;
 /**
  * A utility for referencing Bijection functions in your app's internal API.
@@ -129,6 +140,9 @@ export const internal: {
         "_deleteAllForUserIdAsync": FunctionReferenceFor<typeof users, "_deleteAllForUserIdAsync">;
         "_deletePageForUserId": FunctionReferenceFor<typeof users, "_deletePageForUserId">;
         "getThreadUserId": FunctionReferenceFor<typeof users, "getThreadUserId">;
+    };
+    "verification": {
+        "expire": FunctionReferenceFor<typeof verification, "expire">;
     };
 } = anyApi as any;
 export const components = componentsGeneric() as unknown as {};

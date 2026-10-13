@@ -9,6 +9,24 @@
       "end": 184,
       "replacement_sha256": "6aece56920d730c7b74241dae2e4b7cc77d644eded694b158f75306d3d6c96ba",
       "fence": true
+    },
+    {
+      "id": "verification-custody",
+      "path": "src/component/schema.ts",
+      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
+      "start": 17,
+      "end": 18,
+      "replacement_sha256": "862837fad83de06f4fab81c450ca83633bae62c5513764ccd5852fb890c5c091",
+      "fence": true
+    },
+    {
+      "id": "verification-schema-import",
+      "path": "src/component/schema.ts",
+      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
+      "start": 16,
+      "end": 16,
+      "replacement_sha256": "c0e6f5f61f08ed93ea7a345bfceff533568bf5da94aa7dec3bd6803bcdd2f503",
+      "fence": true
     }
   ]
 }

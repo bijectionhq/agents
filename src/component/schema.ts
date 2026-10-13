@@ -14,8 +14,24 @@ import {
 } from "../validators.js";
 import { typedV } from "@bijectionhq/helpers/validators";
 import vectorTables, { vVectorId } from "./vector/tables.js";
+// concave:begin verification-schema-import
+// why: Import the private verification tables without changing the inherited conversation tables.
+// preserves: src/component/schema.ts#conversation-schema
+// witness: src/component/setup.test.ts
+// remove-when: Private verification custody moves to another component owner.
+import { verificationTables } from "./verificationTables.js";
+// concave:end verification-schema-import
 
+// concave:begin verification-custody
+// why: Keep bounded verification requests and attempts inside the agents component, without duplicating native sessions.
+// witness: src/verification/lifecycle.test.ts
+// preserves: src/component/schema.ts#conversation-schema
+// remove-when: Verification custody is absorbed by another existing component owner.
+// concave:invariant conversation-schema
+// Additive private tables do not replace inherited conversation fields, indexes or validators.
 export const schema = defineSchema({
+  ...verificationTables,
+// concave:end verification-custody
   threads: defineTable({
     userId: v.optional(v.string()), // Unset for anonymous
     title: v.optional(v.string()),

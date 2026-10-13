@@ -1,0 +1,14 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "verification-client-exports",
+      "path": "src/react/index.ts",
+      "upstream_sha256": "271c2bc28fe87a2659dc81ec320e28f2b889b0fe7415258af25d565ee200aa7f",
+      "start": 84,
+      "end": 84,
+      "replacement_sha256": "82ff4861fadf071eccb0f5ae496ae3de62fc1b8356197c77ae3a349a4f0cd135",
+      "fence": true
+    }
+  ]
+}

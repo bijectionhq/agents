@@ -3895,4 +3895,137 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
             }, null, Name>;
         };
     };
+    "verification": {
+        "attempt": FunctionReference<"query", "internal", {
+            actor: string;
+            audienceRevision: number;
+            conversationId: string;
+            definition: string;
+            inputDigest: string;
+            key: string;
+            participantId: string;
+            programIdentity: string;
+            requestId: string;
+        }, null | {
+            kind: "matched" | "unmatched";
+            resource: null | {
+                key: string;
+                type: string;
+            };
+        }, Name>;
+        "begin": FunctionReference<"mutation", "internal", {
+            actor: string;
+            attempts: number;
+            audienceRevision: number;
+            checkPath: string;
+            conversationId: string;
+            definition: string;
+            durationMs: number;
+            participantId: string;
+            programIdentity: string;
+            requestKey: string;
+        }, string, Name>;
+        "cancel": FunctionReference<"mutation", "internal", {
+            actor: string;
+            audienceRevision: number;
+            conversationId: string;
+            definition: string;
+            participantId: string;
+            programIdentity: string;
+            requestId: string;
+        }, null, Name>;
+        "complete": FunctionReference<"mutation", "internal", {
+            actor: string;
+            audienceRevision: number;
+            conversationId: string;
+            definition: string;
+            inputDigest: string;
+            key: string;
+            outcome: {
+                kind: "matched";
+                resource: {
+                    key: string;
+                    type: string;
+                };
+            } | {
+                kind: "unmatched";
+            };
+            participantId: string;
+            programIdentity: string;
+            requestId: string;
+        }, null, Name>;
+        "current": FunctionReference<"query", "internal", {
+            actor: string;
+            audienceRevision: number;
+            checkPath: string;
+            conversationId: string;
+            definition: string;
+            participantId: string;
+            programIdentity: string;
+        }, null | {
+            progress: {
+                admission: null | {
+                    kind: "admitted";
+                    reference: string;
+                } | {
+                    kind: "refused";
+                    reference: null;
+                };
+                attemptsUsed: number;
+                completedAt: null | number;
+                expiredAt: null | number;
+                expiresAt: number;
+                maxAttempts: number;
+                outcome: null | {
+                    key: string;
+                    type: string;
+                };
+                state: "collecting" | "waiting" | "succeeded" | "refused" | "expired" | "cancelled";
+            };
+            requestId: string;
+        }, Name>;
+        "inspect": FunctionReference<"query", "internal", {
+            actor: string;
+            audienceRevision: number;
+            conversationId: string;
+            definition: string;
+            participantId: string;
+            programIdentity: string;
+            requestId: string;
+        }, {
+            admission: null | {
+                kind: "admitted";
+                reference: string;
+            } | {
+                kind: "refused";
+                reference: null;
+            };
+            attemptsUsed: number;
+            completedAt: null | number;
+            expiredAt: null | number;
+            expiresAt: number;
+            maxAttempts: number;
+            outcome: null | {
+                key: string;
+                type: string;
+            };
+            state: "collecting" | "waiting" | "succeeded" | "refused" | "expired" | "cancelled";
+        }, Name>;
+        "recordAdmission": FunctionReference<"mutation", "internal", {
+            actor: string;
+            admission: {
+                kind: "admitted";
+                reference: string;
+            } | {
+                kind: "refused";
+                reference: null;
+            };
+            audienceRevision: number;
+            conversationId: string;
+            definition: string;
+            participantId: string;
+            programIdentity: string;
+            requestId: string;
+        }, null, Name>;
+    };
 };

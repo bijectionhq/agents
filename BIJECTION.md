@@ -19,3 +19,18 @@ ordinary merge commits, followed by inspection and narrowly justified repairs.
 Original examples and documentation are retained for comparison; they do not
 advertise Bijection's native authority, billing, or recovery guarantees.
 GitHub Actions are disabled. Verification is explicit and local.
+
+## Private verification custody
+
+The verification declaration, bounded interaction workflow and reactive client
+are Bijection additions beside the inherited Agent. The component owns private
+requests, attempts and provisional outcomes. Native scoped session admission
+owns authority; a model response and a component row cannot grant it. Existing
+conversation validators and hooks retain their meanings.
+
+These additions were accepted in the platform repository at
+`1b02e49756`, then moved to this source owner so platform imports remain generated.
+Their definition and lifecycle checks run with the inherited component checks;
+[the platform's native session owner](https://github.com/bijectionhq/bijection/blob/1b02e49756/crates/isolate/src/environment/udf/sessions.rs)
+checks scoped admission. Source acceptance and test presence do not claim hosted
+qualification.
