@@ -2,12 +2,21 @@
   "format": 1,
   "exceptions": [
     {
+      "id": "hybrid-overlap-witness-imports",
+      "path": "src/component/messages.test.ts",
+      "upstream_sha256": "c523d03576f5726e0fbd44380468c407cd6cd4749374d47cabba2bbb4eaa3286",
+      "start": 6,
+      "end": 7,
+      "replacement_sha256": "a958d42756855a434a23f65107e469c915cf6915facc9cde6e64bfd55f906166",
+      "fence": true
+    },
+    {
       "id": "hybrid-population-witness-1",
       "path": "src/component/messages.test.ts",
       "upstream_sha256": "c523d03576f5726e0fbd44380468c407cd6cd4749374d47cabba2bbb4eaa3286",
       "start": 17,
       "end": 17,
-      "replacement_sha256": "dc27f13dfd0a6d94b612660ea8fdac9f192dbca5542204b9cda691018871b6ae",
+      "replacement_sha256": "b0e215b8fa57eafd6abe9c325014f60d69963cc42be97063eb8df4fe2801d42d",
       "fence": true
     }
   ]

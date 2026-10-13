@@ -889,45 +889,54 @@ export const searchMessages = action({
       "Specify userId or threadId",
     );
     const limit = args.limit;
-    let textSearchMessages: MessageDoc[] | undefined;
-    if (args.textSearch) {
-      textSearchMessages = await ctx.runQuery(api.messages.textSearch, {
-        searchAllMessagesForUserId: args.searchAllMessagesForUserId,
-        threadId: args.threadId,
-        targetMessageId: args.targetMessageId,
-        text: args.text,
-        limit,
-      });
-    }
-    if (args.vectorSearch) {
-      let embedding = args.embedding;
-      let model = args.embeddingModel;
-      if (!embedding) {
-        if (args.targetMessageId) {
-          const target = await ctx.runQuery(
-            api.messages.getMessageSearchFields,
-            {
-              messageId: args.targetMessageId,
-            },
-          );
+    // concave:begin hybrid-retrieval-overlap
+    // preserves: src/fusion.ts#hybrid-rank-identity
+    // why: Start independent bounded lexical retrieval and vector preparation together; wait for both and preserve lexical-first failure precedence before materializing context.
+    // witness: src/component/messages.test.ts
+    // remove-when: Upstream overlaps these retrieval dependencies with the same failure and fusion semantics.
+    const [lexical, vector] = await Promise.allSettled([
+      args.textSearch
+        ? ctx.runQuery(api.messages.textSearch, {
+            searchAllMessagesForUserId: args.searchAllMessagesForUserId,
+            threadId: args.threadId,
+            targetMessageId: args.targetMessageId,
+            text: args.text,
+            limit,
+          })
+        : undefined,
+      (async () => {
+        if (!args.vectorSearch) return undefined;
+        let embedding = args.embedding;
+        let model = args.embeddingModel;
+        if (!embedding && args.targetMessageId) {
+          const target = await ctx.runQuery(api.messages.getMessageSearchFields, {
+            messageId: args.targetMessageId,
+          });
           assert(target, "Target message embedding not found.");
           embedding = target.embedding;
           model = target.embeddingModel;
         }
-      }
-      assert(embedding && model, "Embedding missing");
-      const dimension = embedding.length;
-      validateVectorDimension(dimension);
-      const vectors = (
-        await searchVectors(ctx, embedding, {
-          dimension,
-          model,
-          table: "messages",
-          searchAllMessagesForUserId: args.searchAllMessagesForUserId,
-          threadId: args.threadId,
-          limit,
-        })
-      ).filter((v) => v._score > (args.vectorScoreThreshold ?? 0));
+        assert(embedding && model, "Embedding missing");
+        const dimension = embedding.length;
+        validateVectorDimension(dimension);
+        return (
+          await searchVectors(ctx, embedding, {
+            dimension,
+            model,
+            table: "messages",
+            searchAllMessagesForUserId: args.searchAllMessagesForUserId,
+            threadId: args.threadId,
+            limit,
+          })
+        ).filter((v) => v._score > (args.vectorScoreThreshold ?? 0));
+      })(),
+    ]);
+    if (lexical.status === "rejected") throw lexical.reason;
+    if (vector.status === "rejected") throw vector.reason;
+    const textSearchMessages = lexical.value;
+    const vectors = vector.value;
+    if (vectors) {
+    // concave:end hybrid-retrieval-overlap
       // concave:begin hybrid-population-2
       // preserves: src/fusion.ts#hybrid-rank-identity
       // why: Fuse lexical and vector candidates before truncation, giving absent matches no score and retaining lexical-only messages.

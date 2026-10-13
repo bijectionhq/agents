@@ -4,7 +4,16 @@ import { bijectionTest } from "@bijectionhq/test";
 import { describe, expect, test, vi } from "vitest";
 import { api } from "./_generated/api.js";
 import type { Id } from "./_generated/dataModel.js";
-import { getMaxMessage } from "./messages.js";
+// concave:begin hybrid-overlap-witness-imports
+// preserves: src/fusion.ts#hybrid-rank-identity
+// why: Exercise the registered action with deterministic retrieval barriers and inherited failure ordering.
+// witness: src/component/messages.test.ts
+// remove-when: Upstream contains these overlap witnesses.
+import { getMaxMessage, searchMessages } from "./messages.js";
+import { getFunctionName } from "bijection/server";
+import { internal } from "./_generated/api.js";
+import type { ActionCtx } from "./_generated/server.js";
+// concave:end hybrid-overlap-witness-imports
 import {
   MAX_MATERIALIZATION_BYTES,
   MAX_MATERIALIZATION_ROWS,
@@ -17,7 +26,7 @@ import { initBijectionTest, modules } from "./setup.test.js";
 describe("agent", () => {
   // concave:begin hybrid-population-witness-1
   // preserves: src/fusion.ts#hybrid-rank-identity
-  // why: Witness the registered hybrid action retaining a lexical-only candidate under a bounded result limit.
+  // why: Witness bounded lexical-only fusion, overlapping independent retrieval, and lexical-first failure precedence before context materialization.
   // witness: src/component/messages.test.ts
   // remove-when: Upstream contains this registered-action regression witness.
   test("hybrid selection admits a lexical-only result before chronological context ordering", async () => {
@@ -45,6 +54,146 @@ describe("agent", () => {
       messageRange: { before: 0, after: 0 },
     });
     expect(selected.map((message) => message._id)).toEqual([messages[0]._id, messages[2]._id]);
+  });
+
+  test.each([false, true])(
+    "hybrid retrieval overlaps lexical wait with vector preparation (target=%s)",
+    async (target) => {
+      let releaseLexical!: (messages: unknown[]) => void;
+      let releaseTarget!: (fields: {
+        embedding: number[];
+        embeddingModel: string;
+      }) => void;
+      const lexical = new Promise<unknown[]>((resolve) => {
+        releaseLexical = resolve;
+      });
+      const targetFields = new Promise<{
+        embedding: number[];
+        embeddingModel: string;
+      }>((resolve) => {
+        releaseTarget = resolve;
+      });
+      const vector = [1, ...Array(127).fill(0)];
+      const vectorSearch = vi.fn();
+      const vectorStarted = new Promise<void>((resolve) => {
+        vectorSearch.mockImplementation(async () => {
+          resolve();
+          return [];
+        });
+      });
+      const fetch = vi.fn().mockResolvedValue([]);
+      const runQuery = vi.fn(
+        async (reference: Parameters<ActionCtx["runQuery"]>[0]) => {
+          const name = getFunctionName(reference);
+          if (name === getFunctionName(api.messages.textSearch)) return lexical;
+          if (name === getFunctionName(api.messages.getMessageSearchFields))
+            return targetFields;
+          if (name === getFunctionName(internal.messages._fetchSearchMessages))
+            return fetch();
+          throw new Error("unexpected query " + name);
+        },
+      );
+      const handler = (
+        searchMessages as unknown as {
+          _handler: (
+            ctx: ActionCtx,
+            args: Parameters<typeof searchMessages._handler>[1],
+          ) => Promise<unknown[]>;
+        }
+      )._handler;
+      const result = handler(
+        { runQuery, vectorSearch } as unknown as ActionCtx,
+        {
+          threadId: "thread" as Id<"threads">,
+          textSearch: true,
+          vectorSearch: true,
+          text: "needle",
+          limit: 10,
+          ...(target
+            ? { targetMessageId: "target" as Id<"messages"> }
+            : { embedding: vector, embeddingModel: "fixture" }),
+        },
+      );
+      if (target) {
+        expect(runQuery).toHaveBeenCalledTimes(2);
+        expect(vectorSearch).not.toHaveBeenCalled();
+        releaseTarget({ embedding: vector, embeddingModel: "fixture" });
+      }
+      await vectorStarted;
+      expect(fetch).not.toHaveBeenCalled();
+      releaseLexical([]);
+      expect(await result).toEqual([]);
+      expect(vectorSearch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test.each(["lexical", "vector"])(
+    "hybrid %s failure prevents context fetch after the other branch finishes",
+    async (side) => {
+      let releaseOther!: () => void;
+      const other = new Promise<never[]>((resolve) => {
+        releaseOther = () => resolve([]);
+      });
+      const failure = new Error(side + " failed");
+      const fetch = vi.fn().mockResolvedValue([]);
+      const runQuery = vi.fn(
+        async (reference: Parameters<ActionCtx["runQuery"]>[0]) => {
+          if (
+            getFunctionName(reference) ===
+            getFunctionName(api.messages.textSearch)
+          ) {
+            if (side === "lexical") throw failure;
+            return other;
+          }
+          return fetch();
+        },
+      );
+      const vectorSearch = vi.fn(async () => {
+        if (side === "vector") throw failure;
+        return other;
+      });
+      const handler = (
+        searchMessages as unknown as {
+          _handler: (
+            ctx: ActionCtx,
+            args: Parameters<typeof searchMessages._handler>[1],
+          ) => Promise<unknown[]>;
+        }
+      )._handler;
+      const result = handler(
+        { runQuery, vectorSearch } as unknown as ActionCtx,
+        {
+          threadId: "thread" as Id<"threads">,
+          textSearch: true,
+          vectorSearch: true,
+          text: "needle",
+          limit: 10,
+          embedding: [1, ...Array(127).fill(0)],
+          embeddingModel: "fixture",
+        },
+      );
+      const rejected = expect(result).rejects.toBe(failure);
+      expect(runQuery).toHaveBeenCalledTimes(1);
+      expect(vectorSearch).toHaveBeenCalledTimes(1);
+      releaseOther();
+      await rejected;
+      expect(fetch).not.toHaveBeenCalled();
+    },
+  );
+
+  test("hybrid failures preserve lexical-first precedence", async () => {
+    const lexical = new Error("lexical first");
+    const vector = new Error("vector second");
+    const runQuery = vi.fn(async () => { throw lexical; });
+    const vectorSearch = vi.fn(async () => { throw vector; });
+    await expect(searchMessages._handler(
+      { runQuery, vectorSearch } as unknown as ActionCtx,
+      { threadId: "thread" as Id<"threads">, textSearch: true, vectorSearch: true,
+        text: "needle", limit: 10, embedding: [1, ...Array(127).fill(0)], embeddingModel: "fixture" },
+    )).rejects.toBe(lexical);
+    expect(runQuery).toHaveBeenCalledTimes(1);
+    expect(vectorSearch).toHaveBeenCalledTimes(1);
   });
 
   // concave:end hybrid-population-witness-1
