@@ -454,7 +454,10 @@
         "src/component/_generated/dataModel.ts",
         "src/component/_generated/server.ts",
         "scripts/check_component_generated.py",
-        "src/component/bijection.config.ts"
+        "src/component/bijection.config.ts",
+        "src/component/verification.ts",
+        "src/component/verificationTables.ts",
+        "src/verification/"
       ],
       "command": [
         "python3",
@@ -499,7 +502,10 @@
         "src/component/users.ts",
         "src/component/vector/index.ts",
         "src/component/vector/tables.ts",
-        "src/component/bijection.config.ts"
+        "src/component/bijection.config.ts",
+        "src/component/verification.ts",
+        "src/component/verificationTables.ts",
+        "src/verification/"
       ],
       "generator": "scripts/component_fork_codegen.py in the Bijection platform checkout",
       "check": "component-generated",
