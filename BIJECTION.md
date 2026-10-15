@@ -20,7 +20,8 @@ regressions. Upstream updates use
 ordinary merge commits, followed by inspection and narrowly justified repairs.
 Original examples and documentation are retained for comparison; they do not
 advertise Bijection's native authority, billing, or recovery guarantees.
-GitHub Actions are disabled. Verification is explicit and local.
+GitHub Actions are disabled. Builds run remotely. Real runtime qualification
+uses the platform's Atlas framework against production deployments.
 
 ## Private verification custody
 
