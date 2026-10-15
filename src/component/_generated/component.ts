@@ -7,7 +7,7 @@
  * To regenerate, run `bijection dev`.
  * @module
  */
-import type { FunctionReference } from "bijection/server";
+import type { FunctionReference, OperationReference } from "bijection/server";
 /**
  * A utility for referencing a Bijection component's exposed API.
  *
@@ -3633,6 +3633,61 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                 type: "other";
             }>;
         }, Name>;
+    };
+    "migrations": {
+        "originalProposal": FunctionReference<"query", "internal", {
+            module: string;
+            originalId: string;
+        }, any, Name>;
+        "status": FunctionReference<"query", "internal", {
+            module: string;
+        }, any, Name>;
+    };
+    "native": {
+        "advance": FunctionReference<"mutation", "internal", {
+            prompt: string;
+            result: {
+                value: any;
+            } | null;
+            run: string;
+            step: number;
+        }, any, Name>;
+        "initialize": FunctionReference<"mutation", "internal", {
+            prompt: string;
+            run: string;
+        }, any, Name>;
+        "progress": FunctionReference<"query", "internal", {
+            run: string;
+        }, any, Name>;
+        "response": FunctionReference<"mutation", "internal", {
+            response: string;
+            run: string;
+            step: number;
+        }, any, Name>;
+    };
+    "proposals": {
+        "configure": FunctionReference<"mutation", "internal", {
+            agents: Array<string>;
+            legacy: string | null;
+            resolve: string | null;
+            submit: string | null;
+        }, null, Name>;
+        "proposals": FunctionReference<"query", "internal", {
+            for: string;
+        }, any, Name>;
+        "propose": FunctionReference<"mutation", "internal", {
+            call: string;
+            reason: string;
+            run: string;
+            supplied: string;
+            tool: string;
+        }, string, Name>;
+        "reject": FunctionReference<"mutation", "internal", {
+            proposal: string;
+        }, null, Name>;
+        "submit": OperationReference<"internal", {
+            proposal: string;
+        }, string, Name>;
     };
     "streams": {
         "abort": FunctionReference<"mutation", "internal", {

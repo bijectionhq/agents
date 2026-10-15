@@ -7,7 +7,7 @@
  * To regenerate, run `bijection dev`.
  * @module
  */
-import type { DataModelFromSchemaDefinition, DocumentByName, TableNamesInDataModel, SystemTableNames, } from "bijection/server";
+import type { DataModelFromSchemaDefinition, DocumentByName, TableNamesInDataModel, SystemTableNames, TableKey, } from "bijection/server";
 import type { GenericId } from "bijection/values";
 import schema from "../schema.js";
 /**
@@ -33,7 +33,7 @@ export type Doc<TableName extends TableNames> = DocumentByName<DataModel, TableN
  *
  * @typeParam TableName - A string literal type of the table name (like "users").
  */
-export type Id<TableName extends TableNames | SystemTableNames> = GenericId<TableName>;
+export type Id<TableName extends TableNames | SystemTableNames> = TableName extends TableNames ? TableKey<DataModel, TableName> : GenericId<TableName>;
 /**
  * A type describing your Bijection data model.
  *
@@ -44,3 +44,4 @@ export type Id<TableName extends TableNames | SystemTableNames> = GenericId<Tabl
  * `mutationGeneric` to make them type-safe.
  */
 export type DataModel = DataModelFromSchemaDefinition<typeof schema>;
+export type QuerySchema = typeof schema.tables;

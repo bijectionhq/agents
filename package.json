@@ -57,6 +57,10 @@
     "./bijection.config.js": {
       "types": "./dist/component/bijection.config.d.ts",
       "default": "./dist/component/bijection.config.js"
+    },
+    "./migration": {
+      "types": "./dist/migration.d.ts",
+      "default": "./dist/migration.js"
     }
   },
   "peerDependencies": {

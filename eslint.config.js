@@ -65,6 +65,18 @@ const providerAdapterDynamicImportRestrictions = [
 // Keep both the bridge file and its imports explicit: the exception must not
 // make that file a general escape hatch into the adapter.
 const reactProviderBridge = "src/react/index.ts";
+// concave:begin canonical-package-bridge-name
+// why: Name only the canonical conversation export as a permitted public bridge.
+// preserves: eslint.config.js#provider-adapter-confinement
+// witness: src/eslintConfig.test.ts
+// remove-when: Upstream provides the same canonical package bridge.
+// The canonical package entry point retains upstream conversation APIs. This
+// permits only that existing entry; implementation imports stay in the adapter.
+// concave:invariant provider-adapter-confinement
+// The canonical bridge permits one inherited export and no provider implementation imports.
+const packageProviderBridge = "src/index.ts";
+// concave:end canonical-package-bridge-name
+
 const reactProviderBridgeImports = [
   "../vercel/UIMessages.js",
   "../vercel/react/optimisticallySendMessage.js",
@@ -194,7 +206,18 @@ export default [
       "src/component/**/*.{ts,tsx}",
       "src/react/**/*.{ts,tsx}",
     ],
-    ignores: ["src/**/*.test.{ts,tsx}", "src/vercel/**", reactProviderBridge],
+// concave:begin canonical-package-bridge-placement
+// why: Route the canonical package entry through its stricter dedicated rule.
+// preserves: eslint.config.js#provider-adapter-confinement
+// witness: src/eslintConfig.test.ts
+// remove-when: Upstream provides the same canonical package bridge.
+    ignores: [
+      "src/**/*.test.{ts,tsx}",
+      "src/vercel/**",
+      reactProviderBridge,
+      packageProviderBridge,
+    ],
+// concave:end canonical-package-bridge-placement
     rules: {
       "no-restricted-imports": [
         "error",
@@ -227,6 +250,34 @@ export default [
       ],
     },
   },
+// concave:begin canonical-package-bridge-rule
+// why: Allow only the inherited conversation entry while rejecting provider imports and alternate adapter paths.
+// preserves: eslint.config.js#provider-adapter-confinement
+// witness: src/eslintConfig.test.ts
+// remove-when: Upstream provides the same canonical package bridge.
+  {
+    files: [packageProviderBridge],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex:
+                "^(?:ai(?:/.*)?|@ai-sdk/.*|vercel(?:/.*)?|(?!(?:\\./vercel/index\\.js)$).*\\/vercel(?:\\/.*)?)$",
+              message:
+                "Only the existing conversation adapter entry may cross the canonical package boundary.",
+            },
+          ],
+        },
+      ],
+      "no-restricted-syntax": [
+        "error",
+        ...providerAdapterDynamicImportRestrictions,
+      ],
+    },
+  },
+// concave:end canonical-package-bridge-rule
   {
     files: ["src/streaming/**/*.{ts,tsx}", "src/component/**/*.{ts,tsx}"],
     ignores: ["src/**/*.test.{ts,tsx}"],

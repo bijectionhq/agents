@@ -14,24 +14,34 @@ import {
 } from "../validators.js";
 import { typedV } from "@bijectionhq/helpers/validators";
 import vectorTables, { vVectorId } from "./vector/tables.js";
-// concave:begin verification-schema-import
-// why: Import the private verification tables without changing the inherited conversation tables.
+// concave:begin component-private-state-import
+// why: Add private verification, reasoning and proposal custody beside inherited conversations.
 // preserves: src/component/schema.ts#conversation-schema
-// witness: src/component/setup.test.ts
-// remove-when: Private verification custody moves to another component owner.
-import { verificationTables } from "./verificationTables.js";
-// concave:end verification-schema-import
-
-// concave:begin verification-custody
-// why: Keep bounded verification requests and attempts inside the agents component, without duplicating native sessions.
 // witness: src/verification/lifecycle.test.ts
+// witness: src/native/progress.test.ts
+// witness: src/native/completion.test.ts
+// remove-when: Upstream supplies equivalent governed work custody or another component owns it.
+import { verificationTables } from "./verificationTables.js";
+import { nativeTables } from "./nativeTables.js";
+import { proposalTables } from "./proposalTables.js";
+import { migrationTables } from "./migrationTables.js";
+// concave:end component-private-state-import
+
+// concave:begin component-private-custody
+// why: Keep governed work private to the component; native sessions and ordinary operation review retain authority.
 // preserves: src/component/schema.ts#conversation-schema
-// remove-when: Verification custody is absorbed by another existing component owner.
+// witness: src/verification/lifecycle.test.ts
+// witness: src/native/progress.test.ts
+// witness: src/native/completion.test.ts
+// remove-when: Upstream supplies equivalent governed work custody or another component owns it.
 // concave:invariant conversation-schema
-// Additive private tables do not replace inherited conversation fields, indexes or validators.
+// Additive private tables preserve inherited conversation fields, indexes and validators.
 export const schema = defineSchema({
   ...verificationTables,
-// concave:end verification-custody
+  ...nativeTables,
+  ...proposalTables,
+  ...migrationTables,
+  // concave:end component-private-custody
   threads: defineTable({
     userId: v.optional(v.string()), // Unset for anonymous
     title: v.optional(v.string()),

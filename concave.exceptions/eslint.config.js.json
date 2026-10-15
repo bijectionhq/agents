@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "canonical-package-bridge-name",
+      "path": "eslint.config.js",
+      "upstream_sha256": "6302948cb169990bc67b69a986aaa3c4b0b45dff5712b2b841c69852c6cee949",
+      "start": 67,
+      "end": 67,
+      "replacement_sha256": "11ad567d39249b8c4a375dbc116d096a746be071f7be093fcc24b6112e5e3a13",
+      "fence": true
+    },
+    {
+      "id": "canonical-package-bridge-placement",
+      "path": "eslint.config.js",
+      "upstream_sha256": "6302948cb169990bc67b69a986aaa3c4b0b45dff5712b2b841c69852c6cee949",
+      "start": 196,
+      "end": 197,
+      "replacement_sha256": "0af8a6da5d72890adaa371b1eebbc1ddc811d03a257b17a7adb5c46df542f039",
+      "fence": true
+    },
+    {
+      "id": "canonical-package-bridge-rule",
+      "path": "eslint.config.js",
+      "upstream_sha256": "6302948cb169990bc67b69a986aaa3c4b0b45dff5712b2b841c69852c6cee949",
+      "start": 229,
+      "end": 229,
+      "replacement_sha256": "873600a4b24f214908769a6671e2c5bea54f3870dd784696f6b02de10054d5f3",
+      "fence": true
+    }
+  ]
+}

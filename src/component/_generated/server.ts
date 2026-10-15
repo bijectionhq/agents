@@ -7,9 +7,9 @@
  * To regenerate, run `bijection dev`.
  * @module
  */
-import type { ActionBuilder, HttpActionBuilder, MutationBuilder, QueryBuilder, GenericActionCtx, GenericMutationCtx, GenericQueryCtx, GenericDatabaseReader, GenericDatabaseWriter, } from "bijection/server";
-import { actionGeneric, httpActionGeneric, queryGeneric, mutationGeneric, internalActionGeneric, internalMutationGeneric, internalQueryGeneric, } from "bijection/server";
-import type { DataModel } from "./dataModel.js";
+import type { BijectionActionBuilder as ActionBuilder, HttpActionBuilder, BijectionMutationBuilder as MutationBuilder, BijectionQueryBuilder as QueryBuilder, BijectionActionCtx as GenericActionCtx, BijectionMutationCtx as GenericMutationCtx, BijectionQueryCtx as GenericQueryCtx, GenericDatabaseReader, GenericDatabaseWriter, } from "bijection/server";
+import { bijectionActionGeneric as actionGeneric, httpActionGeneric, bijectionQueryGeneric as queryGeneric, bijectionMutationGeneric as mutationGeneric, bijectionInternalActionGeneric as internalActionGeneric, bijectionInternalMutationGeneric as internalMutationGeneric, bijectionInternalQueryGeneric as internalQueryGeneric, } from "bijection/server";
+import type { DataModel, QuerySchema } from "./dataModel.js";
 /**
  * Typesafe environment variables.
  *
@@ -28,7 +28,7 @@ type Env = {
  * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
  * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
  */
-export const query: QueryBuilder<DataModel, "public"> = queryGeneric;
+export const query: QueryBuilder<DataModel, "public", QuerySchema> = queryGeneric;
 /**
  * Define a query that is only accessible from other Bijection functions (but not from the client).
  *
@@ -37,7 +37,7 @@ export const query: QueryBuilder<DataModel, "public"> = queryGeneric;
  * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
  * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
  */
-export const internalQuery: QueryBuilder<DataModel, "internal"> = internalQueryGeneric;
+export const internalQuery: QueryBuilder<DataModel, "internal", QuerySchema> = internalQueryGeneric;
 /**
  * Define a mutation in this Bijection app's public API.
  *
@@ -46,7 +46,7 @@ export const internalQuery: QueryBuilder<DataModel, "internal"> = internalQueryG
  * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
  * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
  */
-export const mutation: MutationBuilder<DataModel, "public"> = mutationGeneric;
+export const mutation: MutationBuilder<DataModel, "public", QuerySchema> = mutationGeneric;
 /**
  * Define a mutation that is only accessible from other Bijection functions (but not from the client).
  *
@@ -55,7 +55,7 @@ export const mutation: MutationBuilder<DataModel, "public"> = mutationGeneric;
  * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
  * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
  */
-export const internalMutation: MutationBuilder<DataModel, "internal"> = internalMutationGeneric;
+export const internalMutation: MutationBuilder<DataModel, "internal", QuerySchema> = internalMutationGeneric;
 /**
  * Define an action in this Bijection app's public API.
  *
@@ -67,14 +67,14 @@ export const internalMutation: MutationBuilder<DataModel, "internal"> = internal
  * @param func - The action. It receives an {@link ActionCtx} as its first argument.
  * @returns The wrapped action. Include this as an `export` to name it and make it accessible.
  */
-export const action: ActionBuilder<DataModel, "public"> = actionGeneric;
+export const action: ActionBuilder<DataModel, "public", QuerySchema> = actionGeneric;
 /**
  * Define an action that is only accessible from other Bijection functions (but not from the client).
  *
  * @param func - The function. It receives an {@link ActionCtx} as its first argument.
  * @returns The wrapped function. Include this as an `export` to name it and make it accessible.
  */
-export const internalAction: ActionBuilder<DataModel, "internal"> = internalActionGeneric;
+export const internalAction: ActionBuilder<DataModel, "internal", QuerySchema> = internalActionGeneric;
 /**
  * Define an HTTP action.
  *
@@ -101,7 +101,7 @@ export const env: Env = (globalThis as unknown as {
  *
  * If you're using code generation, use the `QueryCtx` type in `bijection/_generated/server.d.ts` instead.
  */
-export type QueryCtx = GenericQueryCtx<DataModel>;
+export type QueryCtx = GenericQueryCtx<DataModel, QuerySchema>;
 /**
  * A set of services for use within Bijection mutation functions.
  *
@@ -110,14 +110,14 @@ export type QueryCtx = GenericQueryCtx<DataModel>;
  *
  * If you're using code generation, use the `MutationCtx` type in `bijection/_generated/server.d.ts` instead.
  */
-export type MutationCtx = GenericMutationCtx<DataModel>;
+export type MutationCtx = GenericMutationCtx<DataModel, QuerySchema>;
 /**
  * A set of services for use within Bijection action functions.
  *
  * The action context is passed as the first argument to any Bijection action
  * function run on the server.
  */
-export type ActionCtx = GenericActionCtx<DataModel>;
+export type ActionCtx = GenericActionCtx<DataModel, QuerySchema>;
 /**
  * An interface to read from the database within Bijection query functions.
  *

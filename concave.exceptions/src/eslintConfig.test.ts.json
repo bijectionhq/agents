@@ -1,0 +1,23 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "canonical-package-bridge-test-imports",
+      "path": "src/eslintConfig.test.ts",
+      "upstream_sha256": "0abea1d0680958ce9413f00e5fe1e2ce68d9ddb85451fdf360cd66b5f3bc60e4",
+      "start": 0,
+      "end": 1,
+      "replacement_sha256": "3a2f50102d06fa8a7dd64b100145055e6549850eb7197ddb727761623ba6150e",
+      "fence": true
+    },
+    {
+      "id": "canonical-package-bridge-witness",
+      "path": "src/eslintConfig.test.ts",
+      "upstream_sha256": "0abea1d0680958ce9413f00e5fe1e2ce68d9ddb85451fdf360cd66b5f3bc60e4",
+      "start": 4,
+      "end": 4,
+      "replacement_sha256": "0d4b785ed208005b6e373261d10fdebfa44ace15fd385c48c4469d142bd5cbe0",
+      "fence": true
+    }
+  ]
+}
