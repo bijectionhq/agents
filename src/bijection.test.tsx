@@ -17,7 +17,7 @@ import { parse } from "@bijectionhq/helpers/validators";
 import { useQuery } from "@bijectionhq/helpers/react";
 import { useUIMessages } from "./react/index.js";
 import { defineAgent } from "./index.js";
-import { defineAgent as engineDefineAgent } from "./native/index.js";
+import { defineAgent as engineDefineAgent } from "bijection/agents";
 
 test("native declarations use the engine's one admission path", () => {
   expect(defineAgent).toBe(engineDefineAgent);

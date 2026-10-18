@@ -17,6 +17,40 @@
       "preserves": [
         "src/component/schema.ts#validator-identity"
       ]
+    },
+    {
+      "id": "voice-websocket-dependency-0",
+      "path": "package.json",
+      "upstream_sha256": "9133fa2e6fee8da58bca24a0dcc0988322db61006195162e823e57990e58f5c3",
+      "start": 154,
+      "end": 155,
+      "replacement_sha256": "a170190f7e2454470324d92e5b66e9c2f582b433b600f2329bd45b513f275285",
+      "fence": false,
+      "reason": "Keep the adopted Node voice transport dependencies with its fork-owned implementation.",
+      "witnesses": [
+        "src/voice/runtime.test.ts"
+      ],
+      "remove_when": "Upstream includes the same voice transport dependency contract.",
+      "preserves": [
+        "src/component/schema.ts#validator-identity"
+      ]
+    },
+    {
+      "id": "voice-websocket-dependency-1",
+      "path": "package.json",
+      "upstream_sha256": "88273a92c369432e28b11a6a37ca76c80381c4ef59f29699ad8e6dd0a2cb09c1",
+      "start": 163,
+      "end": 163,
+      "replacement_sha256": "23676409fbb11a475d5b7df8a4df89c13ed562c5e5dc0920c35ba222811ccce8",
+      "fence": false,
+      "reason": "Keep the adopted Node voice transport dependencies with its fork-owned implementation.",
+      "witnesses": [
+        "src/voice/runtime.test.ts"
+      ],
+      "remove_when": "Upstream includes the same voice transport dependency contract.",
+      "preserves": [
+        "src/component/schema.ts#validator-identity"
+      ]
     }
   ]
 }

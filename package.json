@@ -159,7 +159,8 @@
     "zod": "3.25.76",
     "bijection": "npm:@bijectionhq/bijection@^0.1.5",
     "@bijectionhq/helpers": "0.1.127",
-    "@bijectionhq/test": "0.0.55"
+    "@bijectionhq/test": "0.0.55",
+    "@types/ws": "^8.5.13"
   },
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
@@ -168,5 +169,8 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "dependencies": {
+    "ws": "8.21.0"
   }
 }
