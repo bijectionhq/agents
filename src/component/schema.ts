@@ -25,16 +25,7 @@ import {
 } from "../validators.js";
 import { typedV } from "@bijectionhq/helpers/validators";
 import vectorTables, { vVectorId } from "./vector/tables.js";
-// concave:begin native-table-policy-layout1
-// why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
-//
-// preserves: src/component/schema.ts#validator-identity
-//
-// witness: src/component/schema.contract.test.ts
-//
-// remove-when: Upstream supplies equivalent native policy and custody bindings.
-//
-// concave:end native-table-policy-layout1
+
 export const schema = defineSchema({
   threads: defineTable({
     userId: v.optional(v.string()), // Unset for anonymous
@@ -196,18 +187,9 @@ export const schema = defineSchema({
   // To authenticate playground usage
   // Delete a key to invalidate it
   // Provide a name to easily identify it / invalidate by name
-  // concave:begin native-table-policy-layout2
-  // why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
-  //
-  // preserves: src/component/schema.ts#validator-identity
-  //
-  // witness: src/component/schema.contract.test.ts
-  //
-  // remove-when: Upstream supplies equivalent native policy and custody bindings.
-  //
-  apiKeys: defineTable({ name: v.optional(v.string()) })
-    .index("name", ["name"]),
-  // concave:end native-table-policy-layout2
+  apiKeys: defineTable({ name: v.optional(v.string()) }).index("name", [
+    "name",
+  ]),
 });
 
 

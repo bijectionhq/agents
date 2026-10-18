@@ -20,24 +20,6 @@
       "fence": true
     },
     {
-      "id": "native-table-policy-layout1",
-      "path": "src/component/schema.ts",
-      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
-      "start": 16,
-      "end": 17,
-      "replacement_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "fence": true
-    },
-    {
-      "id": "native-table-policy-layout2",
-      "path": "src/component/schema.ts",
-      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
-      "start": 178,
-      "end": 181,
-      "replacement_sha256": "f5ae969aac5f9819c17f5452cc80e3ac3910f421180e737c791f1f0cea1222a2",
-      "fence": true
-    },
-    {
       "id": "portable-validator-type",
       "path": "src/component/schema.ts",
       "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
