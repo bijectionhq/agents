@@ -1,0 +1,47 @@
+{
+  "format": 1,
+  "repository": "bijectionhq/agents",
+  "stage": "source-adapted-unqualified",
+  "semantic_adaptation": {
+    "platform_revision": "68c626f8af704fcfb8771df3e87a6b6ca0806c6b",
+    "base_revision": "f517fb7de6ead5c1b6084e9ff11739043d43ddda",
+    "changes": [
+      "native-installation-policy-slots",
+      "native-read-write-disclosure",
+      "retained-source-custody"
+    ],
+    "required_sdk_capabilities": [
+      "defineComponentTableRules",
+      "componentAccessArgs",
+      "defineComponentBinding.policies",
+      "TableDefinition.retain-v2",
+      "policyExecution"
+    ],
+    "tables": {
+      "threads": "_id",
+      "messages": "threadId",
+      "streamingMessages": "threadId",
+      "streamDeltas": "streamId",
+      "memories": "_id",
+      "files": "hash",
+      "apiKeys": "_id",
+      "embeddings_128": "_id",
+      "embeddings_256": "_id",
+      "embeddings_512": "_id",
+      "embeddings_768": "_id",
+      "embeddings_1024": "_id",
+      "embeddings_1408": "_id",
+      "embeddings_1536": "_id",
+      "embeddings_2048": "_id",
+      "embeddings_2560": "_id",
+      "embeddings_3072": "_id",
+      "embeddings_4096": "_id"
+    },
+    "rationale": "BIJECTION.md",
+    "witness": "src/component/schema.contract.test.ts",
+    "source_types": "refreshed-against-adopted-platform-operation-manifest",
+    "native_runtime": "not-run",
+    "qualification": "not-run",
+    "cleanup": "Reconcile adopted platform source; retire duplicate component verification, native run/proposal execution and migration APIs. Native engine owners remain authoritative."
+  }
+}

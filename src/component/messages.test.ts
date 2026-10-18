@@ -31,7 +31,9 @@ describe("agent", () => {
   // remove-when: Upstream contains this registered-action regression witness.
   test("hybrid selection admits a lexical-only result before chronological context ordering", async () => {
     const t = initBijectionTest();
-    const thread = await t.mutation(api.threads.createThread, { userId: "fusion" });
+    const thread = await t.mutation(api.threads.createThread, {
+      userId: "fusion",
+    });
     const vector = (a: number, b: number) => [a, b, ...Array(126).fill(0)];
     const { messages } = await t.mutation(api.messages.addMessages, {
       threadId: thread._id as Id<"threads">,
@@ -40,7 +42,11 @@ describe("agent", () => {
         { message: { role: "user", content: "second unrelated candidate" } },
         { message: { role: "user", content: "needle lexical candidate" } },
       ],
-      embeddings: { vectors: [vector(1, 0), vector(0.8, 0.6), vector(0, 1)], model: "fusion-fixture", dimension: 128 },
+      embeddings: {
+        vectors: [vector(1, 0), vector(0.8, 0.6), vector(0, 1)],
+        model: "fusion-fixture",
+        dimension: 128,
+      },
     });
     const selected = await t.action(api.messages.searchMessages, {
       threadId: thread._id as Id<"threads">,
@@ -53,7 +59,10 @@ describe("agent", () => {
       limit: 2,
       messageRange: { before: 0, after: 0 },
     });
-    expect(selected.map((message) => message._id)).toEqual([messages[0]._id, messages[2]._id]);
+    expect(selected.map((message) => message._id)).toEqual([
+      messages[0]._id,
+      messages[2]._id,
+    ]);
   });
 
   test.each([false, true])(
@@ -185,13 +194,26 @@ describe("agent", () => {
   test("hybrid failures preserve lexical-first precedence", async () => {
     const lexical = new Error("lexical first");
     const vector = new Error("vector second");
-    const runQuery = vi.fn(async () => { throw lexical; });
-    const vectorSearch = vi.fn(async () => { throw vector; });
-    await expect(searchMessages._handler(
-      { runQuery, vectorSearch } as unknown as ActionCtx,
-      { threadId: "thread" as Id<"threads">, textSearch: true, vectorSearch: true,
-        text: "needle", limit: 10, embedding: [1, ...Array(127).fill(0)], embeddingModel: "fixture" },
-    )).rejects.toBe(lexical);
+    const runQuery = vi.fn(async () => {
+      throw lexical;
+    });
+    const vectorSearch = vi.fn(async () => {
+      throw vector;
+    });
+    await expect(
+      searchMessages._handler(
+        { runQuery, vectorSearch } as unknown as ActionCtx,
+        {
+          threadId: "thread" as Id<"threads">,
+          textSearch: true,
+          vectorSearch: true,
+          text: "needle",
+          limit: 10,
+          embedding: [1, ...Array(127).fill(0)],
+          embeddingModel: "fixture",
+        },
+      ),
+    ).rejects.toBe(lexical);
     expect(runQuery).toHaveBeenCalledTimes(1);
     expect(vectorSearch).toHaveBeenCalledTimes(1);
   });

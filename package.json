@@ -58,9 +58,25 @@
       "types": "./dist/component/bijection.config.d.ts",
       "default": "./dist/component/bijection.config.js"
     },
-    "./migration": {
-      "types": "./dist/migration.d.ts",
-      "default": "./dist/migration.js"
+    "./voice": {
+      "types": "./dist/voice/runtime.d.ts",
+      "default": "./dist/voice/runtime.js"
+    },
+    "./voice/contracts": {
+      "types": "./dist/voice/contracts.d.ts",
+      "default": "./dist/voice/contracts.js"
+    },
+    "./voice/node": {
+      "types": "./dist/voice/node.d.ts",
+      "default": "./dist/voice/node.js"
+    },
+    "./voice/openai": {
+      "types": "./dist/voice/openai.d.ts",
+      "default": "./dist/voice/openai.js"
+    },
+    "./voice/twilio-sms": {
+      "types": "./dist/voice/twilio-sms.d.ts",
+      "default": "./dist/voice/twilio-sms.js"
     }
   },
   "peerDependencies": {

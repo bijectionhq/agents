@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "exceptions": [
+    {
+      "id": "native-agent-public-exports",
+      "path": "package.json",
+      "upstream_sha256": "9133fa2e6fee8da58bca24a0dcc0988322db61006195162e823e57990e58f5c3",
+      "start": 72,
+      "end": 75,
+      "replacement_sha256": "4f9f56f4d5aab030109afd44a2139b4b1d51c20ddc32db30fb4842cf1dad083d",
+      "fence": false,
+      "reason": "Export adopted voice channels while retiring duplicate native agent and migration owners; the engine owns runs.",
+      "witnesses": [
+        "src/voice/runtime.test.ts"
+      ],
+      "remove_when": "Upstream exposes the same native engine and voice channel ownership.",
+      "preserves": [
+        "src/component/schema.ts#validator-identity"
+      ]
+    }
+  ]
+}

@@ -628,7 +628,7 @@ async function saveMessageEmbeddings(
   embeddings: NonNullable<Awaited<ReturnType<typeof embedMessages>>>,
 ) {
   if (embeddings.vectors.some((v) => v !== null)) {
-  // concave:end prepared-embedding-6
+    // concave:end prepared-embedding-6
     await ctx.runMutation(component.vector.index.insertBatch, {
       vectorDimension: embeddings.dimension,
       // concave:begin prepared-embedding-7
@@ -637,7 +637,7 @@ async function saveMessageEmbeddings(
       // witness: src/vercel/client/embedding.test.ts
       // remove-when: Upstream aligns prepared input, overlaps independent reads, and reuses exact per-call query vectors with the same regression witnesses.
       vectors: messages
-      // concave:end prepared-embedding-7
+        // concave:end prepared-embedding-7
         .map((m, i) => ({
           messageId: m._id,
           model: embeddings.model,

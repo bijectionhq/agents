@@ -2,21 +2,39 @@
   "format": 1,
   "exceptions": [
     {
-      "id": "component-private-custody",
+      "id": "native-table-policy-bindings3",
       "path": "src/component/schema.ts",
       "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
-      "start": 17,
-      "end": 18,
-      "replacement_sha256": "98fb6f81ebe1f0168861301c4758cfe1a1b44a4b3aa040240e196c222f64a742",
+      "start": 187,
+      "end": 187,
+      "replacement_sha256": "ee7d49a5035619dddbcb7028ebe1b3dd717297b646f3745e34070e1d1eed77e6",
       "fence": true
     },
     {
-      "id": "component-private-state-import",
+      "id": "native-table-policy-imports0",
+      "path": "src/component/schema.ts",
+      "upstream_sha256": "0c1da2417fe26fe34f1b22c7a13555ee21a9d32749e0e4d5891e14de87111288",
+      "start": 0,
+      "end": 2,
+      "replacement_sha256": "c0b4e4000ef3b860889610e7d8da9390d45e3b081876d21232fb0166ac1c6874",
+      "fence": true
+    },
+    {
+      "id": "native-table-policy-layout1",
       "path": "src/component/schema.ts",
       "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
       "start": 16,
-      "end": 16,
-      "replacement_sha256": "5b3b2259f10c864d5bd814e04cac1a2493ece42bacdb53345abf47e6843f7b90",
+      "end": 17,
+      "replacement_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fence": true
+    },
+    {
+      "id": "native-table-policy-layout2",
+      "path": "src/component/schema.ts",
+      "upstream_sha256": "09bb241a1d66c453cc1ea1e697d7f773283edfdc9144efc4c1cd7006b5bdbf8f",
+      "start": 178,
+      "end": 181,
+      "replacement_sha256": "f5ae969aac5f9819c17f5452cc80e3ac3910f421180e737c791f1f0cea1222a2",
       "fence": true
     },
     {

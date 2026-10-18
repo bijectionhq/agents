@@ -909,9 +909,12 @@ export const searchMessages = action({
         let embedding = args.embedding;
         let model = args.embeddingModel;
         if (!embedding && args.targetMessageId) {
-          const target = await ctx.runQuery(api.messages.getMessageSearchFields, {
-            messageId: args.targetMessageId,
-          });
+          const target = await ctx.runQuery(
+            api.messages.getMessageSearchFields,
+            {
+              messageId: args.targetMessageId,
+            },
+          );
           assert(target, "Target message embedding not found.");
           embedding = target.embedding;
           model = target.embeddingModel;
@@ -936,7 +939,7 @@ export const searchMessages = action({
     const textSearchMessages = lexical.value;
     const vectors = vector.value;
     if (vectors) {
-    // concave:end hybrid-retrieval-overlap
+      // concave:end hybrid-retrieval-overlap
       // concave:begin hybrid-population-2
       // preserves: src/fusion.ts#hybrid-rank-identity
       // why: Fuse lexical and vector candidates before truncation, giving absent matches no score and retaining lexical-only messages.

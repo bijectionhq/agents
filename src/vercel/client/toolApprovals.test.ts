@@ -742,9 +742,14 @@ describe("tool approval semantics", () => {
     // tool result is produced after that handler and is not its retained input.
     const prompt = lastModelPrompt();
     const handled = prompt.filter(
-      (message) => !(message.role === "tool" && message.content.some(
-        (part) => part.type === "tool-result" && part.toolCallId === "call-b",
-      )),
+      (message) =>
+        !(
+          message.role === "tool" &&
+          message.content.some(
+            (part) =>
+              part.type === "tool-result" && part.toolCallId === "call-b",
+          )
+        ),
     );
     expect(handled).toHaveLength(prompt.length - 1);
     for (const message of handled) {

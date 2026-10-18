@@ -1,5 +1,16 @@
+// concave:begin native-table-policy-imports0
+// why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
+//
+// preserves: src/component/schema.ts#validator-identity
+//
+// witness: src/component/schema.contract.test.ts
+//
+// remove-when: Upstream supplies equivalent native policy and custody bindings.
+//
+import * as access from "./access.js";
 import { defineSchema, defineTable } from "bijection/server";
 import { v } from "bijection/values";
+// concave:end native-table-policy-imports0
 import {
   vThreadStatus,
   vMessage,
@@ -14,34 +25,17 @@ import {
 } from "../validators.js";
 import { typedV } from "@bijectionhq/helpers/validators";
 import vectorTables, { vVectorId } from "./vector/tables.js";
-// concave:begin component-private-state-import
-// why: Add private verification, reasoning and proposal custody beside inherited conversations.
-// preserves: src/component/schema.ts#conversation-schema
-// witness: src/verification/lifecycle.test.ts
-// witness: src/native/progress.test.ts
-// witness: src/native/completion.test.ts
-// remove-when: Upstream supplies equivalent governed work custody or another component owns it.
-import { verificationTables } from "./verificationTables.js";
-import { nativeTables } from "./nativeTables.js";
-import { proposalTables } from "./proposalTables.js";
-import { migrationTables } from "./migrationTables.js";
-// concave:end component-private-state-import
-
-// concave:begin component-private-custody
-// why: Keep governed work private to the component; native sessions and ordinary operation review retain authority.
-// preserves: src/component/schema.ts#conversation-schema
-// witness: src/verification/lifecycle.test.ts
-// witness: src/native/progress.test.ts
-// witness: src/native/completion.test.ts
-// remove-when: Upstream supplies equivalent governed work custody or another component owns it.
-// concave:invariant conversation-schema
-// Additive private tables preserve inherited conversation fields, indexes and validators.
+// concave:begin native-table-policy-layout1
+// why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
+//
+// preserves: src/component/schema.ts#validator-identity
+//
+// witness: src/component/schema.contract.test.ts
+//
+// remove-when: Upstream supplies equivalent native policy and custody bindings.
+//
+// concave:end native-table-policy-layout1
 export const schema = defineSchema({
-  ...verificationTables,
-  ...nativeTables,
-  ...proposalTables,
-  ...migrationTables,
-  // concave:end component-private-custody
   threads: defineTable({
     userId: v.optional(v.string()), // Unset for anonymous
     title: v.optional(v.string()),
@@ -202,10 +196,20 @@ export const schema = defineSchema({
   // To authenticate playground usage
   // Delete a key to invalidate it
   // Provide a name to easily identify it / invalidate by name
-  apiKeys: defineTable({ name: v.optional(v.string()) }).index("name", [
-    "name",
-  ]),
+  // concave:begin native-table-policy-layout2
+  // why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
+  //
+  // preserves: src/component/schema.ts#validator-identity
+  //
+  // witness: src/component/schema.contract.test.ts
+  //
+  // remove-when: Upstream supplies equivalent native policy and custody bindings.
+  //
+  apiKeys: defineTable({ name: v.optional(v.string()) })
+    .index("name", ["name"]),
+  // concave:end native-table-policy-layout2
 });
+
 
 // concave:begin portable-validator-type
 // preserves: src/component/schema.ts#validator-identity
@@ -220,3 +224,33 @@ export const vv: ReturnType<typeof typedV<typeof schema>> = typedV(schema);
 export { vv as v };
 
 export default schema;
+// concave:begin native-table-policy-bindings3
+// why: Bind current host table policies and retained source custody while preserving inherited validators and indexes.
+//
+// preserves: src/component/schema.ts#validator-identity
+//
+// witness: src/component/schema.contract.test.ts
+//
+// remove-when: Upstream supplies equivalent native policy and custody bindings.
+//
+
+// Native table policies and retained source custody; no permission snapshot.
+access.apiKeysAccess.protect(schema.tables.apiKeys).retain({ by: "_id" });
+access.embeddings_1024Access.protect(schema.tables.embeddings_1024).retain({ by: "_id" });
+access.embeddings_128Access.protect(schema.tables.embeddings_128).retain({ by: "_id" });
+access.embeddings_1408Access.protect(schema.tables.embeddings_1408).retain({ by: "_id" });
+access.embeddings_1536Access.protect(schema.tables.embeddings_1536).retain({ by: "_id" });
+access.embeddings_2048Access.protect(schema.tables.embeddings_2048).retain({ by: "_id" });
+access.embeddings_256Access.protect(schema.tables.embeddings_256).retain({ by: "_id" });
+access.embeddings_2560Access.protect(schema.tables.embeddings_2560).retain({ by: "_id" });
+access.embeddings_3072Access.protect(schema.tables.embeddings_3072).retain({ by: "_id" });
+access.embeddings_4096Access.protect(schema.tables.embeddings_4096).retain({ by: "_id" });
+access.embeddings_512Access.protect(schema.tables.embeddings_512).retain({ by: "_id" });
+access.embeddings_768Access.protect(schema.tables.embeddings_768).retain({ by: "_id" });
+access.filesAccess.protect(schema.tables.files).retain({ by: "hash" });
+access.memoriesAccess.protect(schema.tables.memories).retain({ by: "_id" });
+access.messagesAccess.protect(schema.tables.messages).retain({ by: "threadId" });
+access.streamDeltasAccess.protect(schema.tables.streamDeltas).retain({ by: "streamId" });
+access.streamingMessagesAccess.protect(schema.tables.streamingMessages).retain({ by: "threadId" });
+access.threadsAccess.protect(schema.tables.threads).retain({ by: "_id" });
+// concave:end native-table-policy-bindings3

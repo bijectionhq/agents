@@ -2,18 +2,24 @@
 import { useMutation, useQuery } from "bijection/react";
 import { useRef } from "react";
 import type { FunctionReference } from "bijection/server";
-import type { VerificationProgress } from "../verification/lifecycle.js";
-import type { VerificationAdmission } from "../verification/boundary.js";
+import type { VerificationState } from "bijection/sessions";
 
-export type VerificationView = VerificationProgress & {
-  admission: VerificationAdmission | null;
+export type VerificationView = {
+  state: VerificationState;
+  attemptsUsed: number;
+  maxAttempts: number;
+  expiresAt: number;
+  establishes: string;
+  completedAt: number | null;
   expiredAt: number | null;
 };
+type Selection = { verification: string; conversationId: string };
+type Request = Selection & { requestId: string };
 export type VerificationApi = {
   current: FunctionReference<
     "query",
     "public",
-    { check: string; conversationId: string },
+    Selection,
     {
       request: { requestId: string; progress: VerificationView } | null;
       questions: Record<string, string>;
@@ -22,48 +28,28 @@ export type VerificationApi = {
   begin: FunctionReference<
     "mutation",
     "public",
-    { check: string; conversationId: string; requestKey: string },
+    Selection & { requestKey: string },
     string
   >;
   submit: FunctionReference<
     "mutation",
     "public",
-    {
-      check: string;
-      conversationId: string;
-      requestId: string;
-      attemptKey: string;
-      answers: Record<string, string>;
-    },
+    Request & { attemptKey: string; answers: Record<string, string> },
     VerificationView
   >;
-  resume: FunctionReference<
-    "mutation",
-    "public",
-    { check: string; conversationId: string; requestId: string },
-    VerificationView
-  >;
-  cancel: FunctionReference<
-    "mutation",
-    "public",
-    { check: string; conversationId: string; requestId: string },
-    null
-  >;
+  cancel: FunctionReference<"mutation", "public", Request, null>;
 };
 
 /** Reactive server-owned progress survives refresh and reconnect.
- * Answers go only to the installed check; they never become chat messages. */
+ * Answers go only to the installed interaction; they never become chat
+ * messages. */
 // concave:invariant verification-client-scope
-// Answers and progress remain with the installed verification API; the hook issues no authority.
-export function useVerification(
-  api: VerificationApi,
-  interaction: { check: string; conversationId: string },
-) {
-  const current = useQuery(api.current, interaction);
+// Answers and progress remain with the installed interaction API; the hook issues no authority.
+export function useVerification(api: VerificationApi, selection: Selection) {
+  const current = useQuery(api.current, selection);
   const begin = useMutation(api.begin);
   const submit = useMutation(api.submit);
   const cancel = useMutation(api.cancel);
-  const resume = useMutation(api.resume);
   const pending = useRef<{
     identity: string;
     key: string;
@@ -73,13 +59,13 @@ export function useVerification(
     loading: current === undefined,
     questions: current?.questions ?? {},
     progress: current?.request?.progress ?? null,
-    start: () => begin({ ...interaction, requestKey: crypto.randomUUID() }),
+    start: () => begin({ ...selection, requestKey: crypto.randomUUID() }),
     submit: async (answers: Record<string, string>) => {
       if (!current?.request)
         throw new Error("Start verification before submitting answers");
       const identity = JSON.stringify([
-        interaction.check,
-        interaction.conversationId,
+        selection.verification,
+        selection.conversationId,
         current.request.requestId,
         Object.entries(answers).sort(([a], [b]) => a.localeCompare(b)),
       ]);
@@ -90,7 +76,7 @@ export function useVerification(
       const attempt = pending.current;
       if (attempt.promise) return attempt.promise;
       const promise = submit({
-        ...interaction,
+        ...selection,
         requestId: current.request.requestId,
         attemptKey: attempt.key,
         answers: { ...answers },
@@ -104,15 +90,10 @@ export function useVerification(
         attempt.promise = undefined;
       }
     },
-    resume: () => {
-      if (!current?.request)
-        throw new Error("No verification request to resume");
-      return resume({ ...interaction, requestId: current.request.requestId });
-    },
     cancel: () => {
       if (!current?.request)
         throw new Error("No verification request to cancel");
-      return cancel({ ...interaction, requestId: current.request.requestId });
+      return cancel({ ...selection, requestId: current.request.requestId });
     },
   };
 }
