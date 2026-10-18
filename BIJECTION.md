@@ -6,7 +6,9 @@ validators, function references, serialization, and transaction behavior. Its
 SDK imports resolve through the application's single `bijection` installation.
 The component owns `defineAgent`, `agentsModule`, model generation, response
 validation and tool-loop orchestration, exposed by `@bijectionhq/agents/native`.
-Conversation storage and streaming retain their inherited implementation. The
+The root entry retains the inherited `Agent` conversation API. Service runs are
+imported explicitly from `/native`; native run transport comes from
+`bijection/agents`. Conversation storage and streaming retain their inherited implementation. The
 SDK supplies the `agentExecution` transport; the engine still admits runs, retains
 checkpoints and source custody, enforces bounds, and authorizes output delivery.
 Moving the recipe does not move these enforcement decisions into application code.

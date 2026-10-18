@@ -1,6 +1,5 @@
-/** Native runs and upstream conversation storage share one SDK. */
+/** Inherited conversation API. Governed service runs use ./native. */
 export * from "./vercel/index.js";
-export * from "./native/index.js";
 
 export {
   agentMailDefinition,

@@ -16,11 +16,13 @@ import {
 import { parse } from "@bijectionhq/helpers/validators";
 import { useQuery } from "@bijectionhq/helpers/react";
 import { useUIMessages } from "./react/index.js";
-import { defineAgent } from "./index.js";
+import * as conversations from "./index.js";
 import { defineAgent as nativeDefineAgent } from "./native/index.js";
 
-test("native declarations use the component's one execution recipe", () => {
-  expect(defineAgent).toBe(nativeDefineAgent);
+test("conversation and governed service APIs have distinct public entries", () => {
+  expect(conversations.Agent).toBeTypeOf("function");
+  expect(conversations).not.toHaveProperty("defineAgent");
+  expect(nativeDefineAgent).toBeTypeOf("function");
 });
 
 test("helper validators retain exact values and inherited identity markers", () => {
