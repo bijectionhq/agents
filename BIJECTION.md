@@ -4,8 +4,12 @@ This is a maintained fork of get-convex/agent at
 `3e5bc1f698877b8ff55bd56f62a76d92cafc2bbd`. The package keeps inherited
 validators, function references, serialization, and transaction behavior. Its
 SDK imports resolve through the application's single `bijection` installation.
-Native agent runs remain owned by the platform engine; conversation storage and
-streaming remain owned by this component.
+The component owns `defineAgent`, `agentsModule`, model generation, response
+validation and tool-loop orchestration, exposed by `@bijectionhq/agents/native`.
+Conversation storage and streaming retain their inherited implementation. The
+SDK supplies the `agentExecution` transport; the engine still admits runs, retains
+checkpoints and source custody, enforces bounds, and authorizes output delivery.
+Moving the recipe does not move these enforcement decisions into application code.
 
 Every inherited difference is checked by the same Concave source in Bijection.
 Mechanical module and public identifier changes have explicit recipes in

@@ -17,10 +17,10 @@ import { parse } from "@bijectionhq/helpers/validators";
 import { useQuery } from "@bijectionhq/helpers/react";
 import { useUIMessages } from "./react/index.js";
 import { defineAgent } from "./index.js";
-import { defineAgent as engineDefineAgent } from "bijection/agents";
+import { defineAgent as nativeDefineAgent } from "./native/index.js";
 
-test("native declarations use the engine's one admission path", () => {
-  expect(defineAgent).toBe(engineDefineAgent);
+test("native declarations use the component's one execution recipe", () => {
+  expect(defineAgent).toBe(nativeDefineAgent);
 });
 
 test("helper validators retain exact values and inherited identity markers", () => {

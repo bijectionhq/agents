@@ -7,15 +7,12 @@
       "upstream_sha256": "9133fa2e6fee8da58bca24a0dcc0988322db61006195162e823e57990e58f5c3",
       "start": 72,
       "end": 75,
-      "replacement_sha256": "4f9f56f4d5aab030109afd44a2139b4b1d51c20ddc32db30fb4842cf1dad083d",
+      "replacement_sha256": "6fad18a4a13db54cd913ebf7622ebb8231ec220bc1418f4c35f461b6d7eadee7",
       "fence": false,
-      "reason": "Export adopted voice channels while retiring duplicate native agent and migration owners; the engine owns runs.",
+      "reason": "Expose the component-owned governed model-loop recipe beside the existing voice adapters; native admission, checkpoints, custody and output acceptance stay in the SDK and engine.",
       "witnesses": [
-        "src/voice/runtime.test.ts"
-      ],
-      "remove_when": "Upstream exposes the same native engine and voice channel ownership.",
-      "preserves": [
-        "src/component/schema.ts#validator-identity"
+        "src/native/completion.test.ts",
+        "src/native/generation.test.ts"
       ]
     },
     {

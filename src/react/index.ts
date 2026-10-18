@@ -86,7 +86,7 @@ export function useStreamingText(
 // concave:begin verification-client-exports
 // why: Expose the new verification hook alongside the unchanged inherited conversation hooks.
 // preserves: src/react/useVerification.ts#verification-client-scope
-// witness: src/verification/boundary.test.ts
+// witness: tsconfig.build.json
 // remove-when: The public verification client leaves this package.
 export {
   useVerification,

@@ -77,6 +77,10 @@
     "./voice/twilio-sms": {
       "types": "./dist/voice/twilio-sms.d.ts",
       "default": "./dist/voice/twilio-sms.js"
+    },
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "default": "./dist/native/index.js"
     }
   },
   "peerDependencies": {
