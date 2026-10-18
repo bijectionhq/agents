@@ -16,12 +16,12 @@ import type { GenericActionCtx, GenericDataModel } from "bijection/server";
 import type { ProviderOptions } from "../../validators.js";
 import type { Agent } from "../index.js";
 
-const MIGRATION_URL = "node_modules/@convex-dev/agent/MIGRATION.md";
+const MIGRATION_URL = "node_modules/@bijectionhq/agents/MIGRATION.md";
 const warnedDeprecations = new Set<string>();
 function warnDeprecation(key: string, message: string) {
   if (!warnedDeprecations.has(key)) {
     warnedDeprecations.add(key);
-    console.warn(`[@convex-dev/agent] ${message}\n  See: ${MIGRATION_URL}`);
+    console.warn(`[@bijectionhq/agents] ${message}\n  See: ${MIGRATION_URL}`);
   }
 }
 
@@ -87,7 +87,7 @@ type NeverOptional<N, T> = 0 extends 1 & N
  * Using a string literal type causes TypeScript to show this message in errors.
  */
 type HANDLER_REMOVED_ERROR =
-  "⚠️ 'handler' was removed in @convex-dev/agent v0.6.0. Rename to 'execute'. See: node_modules/@convex-dev/agent/MIGRATION.md";
+  "⚠️ 'handler' was removed in @bijectionhq/agents v0.6.0. Rename to 'execute'. See: node_modules/@bijectionhq/agents/MIGRATION.md";
 
 export type ToolOutputPropertiesCtx<
   INPUT,
@@ -118,7 +118,7 @@ export type ToolOutputPropertiesCtx<
  * Using a string literal type causes TypeScript to show this message in errors.
  */
 type ARGS_REMOVED_ERROR =
-  "⚠️ 'args' was removed in @convex-dev/agent v0.6.0. Rename to 'inputSchema'. See: node_modules/@convex-dev/agent/MIGRATION.md";
+  "⚠️ 'args' was removed in @bijectionhq/agents v0.6.0. Rename to 'inputSchema'. See: node_modules/@bijectionhq/agents/MIGRATION.md";
 
 export type ToolInputProperties<INPUT> = {
   /**

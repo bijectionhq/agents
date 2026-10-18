@@ -188,6 +188,10 @@
           {
             "from": "CONVEX_SITE_URL",
             "to": "BIJECTION_SITE_URL"
+          },
+          {
+            "from": "@convex-dev/agent",
+            "to": "@bijectionhq/agents"
           }
         ],
         "except": [

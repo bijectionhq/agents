@@ -56,7 +56,7 @@ type AssertAISDKv7<T> = T extends string
   ? T
   : T extends { specificationVersion: "v4" }
     ? T
-    : "⚠️ @convex-dev/agent requires AI SDK v7. Update your dependencies: npm install ai@^7.0.0 @ai-sdk/openai@^4.0.0 (or other provider).";
+    : "⚠️ @bijectionhq/agents requires AI SDK v7. Update your dependencies: npm install ai@^7.0.0 @ai-sdk/openai@^4.0.0 (or other provider).";
 
 export type AgentPrompt = {
   /**

@@ -1,8 +1,8 @@
 /**
  * Internal AI SDK implementation for the Agent API.
  *
- * Consumers continue to import this API from `@convex-dev/agent`. A public
- * `@convex-dev/agent/vercel` entry point is intentionally deferred until its
+ * Consumers continue to import this API from `@bijectionhq/agents`. A public
+ * `@bijectionhq/agents/vercel` entry point is intentionally deferred until its
  * provider-adapter API is defined.
  */
 
@@ -30,12 +30,12 @@ import type {
 } from "ai";
 import { generateObject, generateText, isStepCount, streamObject } from "ai";
 
-const MIGRATION_URL = "node_modules/@convex-dev/agent/MIGRATION.md";
+const MIGRATION_URL = "node_modules/@bijectionhq/agents/MIGRATION.md";
 const warnedDeprecations = new Set<string>();
 function warnDeprecation(key: string, message: string) {
   if (!warnedDeprecations.has(key)) {
     warnedDeprecations.add(key);
-    console.warn(`[@convex-dev/agent] ${message}\n  See: ${MIGRATION_URL}`);
+    console.warn(`[@bijectionhq/agents] ${message}\n  See: ${MIGRATION_URL}`);
   }
 }
 import { assert, omit, pick } from "@bijectionhq/helpers";
@@ -129,7 +129,7 @@ export {
   serializeMessage,
   toUIFilePart,
 } from "./mapping.js";
-// NOTE: these are also exported via @convex-dev/agent/validators
+// NOTE: these are also exported via @bijectionhq/agents/validators
 // a future version may put them all here or move these over there
 export { extractText, isTool, sorted } from "../shared.js";
 export {
